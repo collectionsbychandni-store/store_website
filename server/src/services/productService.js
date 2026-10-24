@@ -1,4 +1,4 @@
-import prisma from '../config/db.js';
+import prisma, { syncDatabaseSchema } from '../config/db.js';
 import * as categoryService from './categoryService.js';
 
 /**
@@ -189,6 +189,8 @@ async function isDatabaseAlive() {
     await Promise.race([prisma.$queryRaw`SELECT 1`, timeout]);
     lastDbAliveStatus = true;
     lastDbCheckTime = now;
+    // Auto-sync schema in background if needed
+    syncDatabaseSchema().catch(() => {});
     return true;
   } catch (e) {
     lastDbAliveStatus = false;
@@ -850,31 +852,64 @@ export async function createProduct({
       throw err;
     }
 
-    const created = await prisma.product.create({
-      data: {
-        title: trimmedTitle,
-        slug,
-        description: description ? description.trim() : '',
-        categoryId: trimmedCategoryId,
-        brand: brand ? brand.trim() : 'Collections by Chandni',
-        featured: Boolean(featured),
-        isActive: Boolean(isActive),
-      },
-      include: {
-        category: {
-          select: { id: true, name: true, slug: true },
+    let created;
+    try {
+      created = await prisma.product.create({
+        data: {
+          title: trimmedTitle,
+          slug,
+          description: description ? description.trim() : '',
+          categoryId: trimmedCategoryId,
+          brand: brand ? brand.trim() : 'Collections by Chandni',
+          featured: Boolean(featured),
+          isActive: Boolean(isActive),
         },
-        images: true,
-        variants: true,
-        _count: {
-          select: { variants: true, images: true },
+        include: {
+          category: {
+            select: { id: true, name: true, slug: true },
+          },
+          variants: true,
+          _count: {
+            select: { variants: true, images: true },
+          },
         },
-      },
-    });
+      });
+    } catch (createErr) {
+      if (
+        createErr.message?.includes('product_images') ||
+        createErr.code === 'P2021' ||
+        createErr.code === 'P2022'
+      ) {
+        await syncDatabaseSchema().catch(() => {});
+        created = await prisma.product.create({
+          data: {
+            title: trimmedTitle,
+            slug,
+            description: description ? description.trim() : '',
+            categoryId: trimmedCategoryId,
+            brand: brand ? brand.trim() : 'Collections by Chandni',
+            featured: Boolean(featured),
+            isActive: Boolean(isActive),
+          },
+          include: {
+            category: {
+              select: { id: true, name: true, slug: true },
+            },
+            variants: true,
+            _count: {
+              select: { variants: true, images: true },
+            },
+          },
+        });
+      } else {
+        throw createErr;
+      }
+    }
 
     return {
       ...created,
-      priceRange: derivePriceRange(created.variants),
+      images: [],
+      priceRange: derivePriceRange(created.variants || []),
     };
   }
 

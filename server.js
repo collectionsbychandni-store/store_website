@@ -6,6 +6,7 @@ import apiRoutes from './server/src/routes/index.js';
 import { securityHeaders, globalRateLimiter } from './server/src/middleware/securityMiddleware.js';
 import { requestLogger } from './server/src/middleware/logger.js';
 import { errorHandler } from './server/src/middleware/errorHandler.js';
+import { syncDatabaseSchema } from './server/src/config/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,6 +14,9 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
+
+  // Asynchronously verify and synchronize database schema
+  syncDatabaseSchema().catch(() => {});
 
   // Security hardening: Disable server technology banner
   app.disable('x-powered-by');
