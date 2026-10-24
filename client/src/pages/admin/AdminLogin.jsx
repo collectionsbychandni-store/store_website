@@ -17,8 +17,8 @@ import Button from '../../components/Button';
  * - Demo credentials hint
  */
 export default function AdminLogin() {
-  const [email, setEmail] = useState('admin@collectionsbychandni.in');
-  const [password, setPassword] = useState('Admin@123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,12 +60,6 @@ export default function AdminLogin() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleFillDemo = () => {
-    setEmail('admin@collectionsbychandni.in');
-    setPassword('Admin@123');
-    setError('');
   };
 
   return (
@@ -191,30 +185,6 @@ export default function AdminLogin() {
                 </Button>
               </div>
             </form>
-
-            {/* Demo Credentials Box */}
-            <div className="pt-4 border-t border-stone-100 text-xs text-stone-500 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold uppercase tracking-wider text-stone-700">
-                  Demo Credentials:
-                </span>
-                <button
-                  type="button"
-                  onClick={handleFillDemo}
-                  className="text-stone-900 underline hover:text-amber-800 font-medium"
-                >
-                  Fill credentials
-                </button>
-              </div>
-              <p className="font-mono text-[11px] text-stone-600 bg-stone-50 p-2 rounded-sm border border-stone-200">
-                Email: <span className="text-stone-900 font-semibold">admin@collectionsbychandni.in</span>
-                <br />
-                Password: <span className="text-stone-900 font-semibold">Admin@123</span>
-              </p>
-              <p className="text-[11px] text-stone-400">
-                Note: Passwords are encrypted with bcrypt and verified against PostgreSQL.
-              </p>
-            </div>
           </div>
         </div>
       </Container>
