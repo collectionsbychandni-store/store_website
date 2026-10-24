@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /shop
+Allow: /categories
+Allow: /product/
+
+# Disallow private user accounts and admin consoles from indexing
+Disallow: /admin/
+Disallow: /account/
+Disallow: /checkout/
+Disallow: /api/
+
+Sitemap: https://collectionsbychandni.in/sitemap.xml
