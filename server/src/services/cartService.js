@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import prisma from '../config/db.js';
 import * as variantService from './variantService.js';
 import * as productService from './productService.js';
+import { loadCollection, saveCollection } from '../utils/fileStore.js';
 
 /**
  * Collections by Chandni - Cart Service
@@ -15,8 +16,12 @@ import * as productService from './productService.js';
  * - Dual database (Prisma) and in-memory fallback support
  */
 
-// In-Memory store for carts
-let inMemoryCarts = [];
+// In-Memory store for carts backed by persistent disk storage
+let inMemoryCarts = loadCollection('carts', []);
+
+export function persistCarts() {
+  saveCollection('carts', inMemoryCarts);
+}
 
 export function _getInMemoryCarts() {
   return inMemoryCarts;
@@ -24,6 +29,7 @@ export function _getInMemoryCarts() {
 
 export function _setInMemoryCarts(carts) {
   inMemoryCarts = carts;
+  persistCarts();
 }
 
 let lastDbCheckTime = 0;
@@ -268,6 +274,7 @@ async function findOrCreateCart({ userId, guestId }) {
       updatedAt: new Date(),
     };
     inMemoryCarts.push(cart);
+    persistCarts();
   }
 
   return cart;
@@ -409,6 +416,7 @@ export async function addItemToCart({ userId, guestId, productId, variantId, qua
   }
 
   cart.updatedAt = new Date();
+  persistCarts();
   return await enrichCart(cart);
 }
 
@@ -470,6 +478,7 @@ export async function updateCartItemQuantity({ userId, guestId, itemId, quantity
   item.priceSnapshot = Number(variant.sellingPrice) || item.priceSnapshot;
   item.updatedAt = new Date();
   cart.updatedAt = new Date();
+  persistCarts();
 
   return await enrichCart(cart);
 }
@@ -506,6 +515,7 @@ export async function removeCartItem({ userId, guestId, itemId }) {
   }
 
   cart.updatedAt = new Date();
+  persistCarts();
   return await enrichCart(cart);
 }
 
@@ -522,6 +532,7 @@ export async function clearCart({ userId, guestId }) {
   if (cart) {
     cart.items = [];
     cart.updatedAt = new Date();
+    persistCarts();
     return await enrichCart(cart);
   }
 

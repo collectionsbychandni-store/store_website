@@ -3,6 +3,7 @@ import prisma from '../config/db.js';
 import bcrypt from 'bcryptjs';
 import { hashPassword, comparePassword } from '../utils/password.js';
 import { generateToken } from '../utils/jwt.js';
+import { loadCollection, saveCollection } from '../utils/fileStore.js';
 
 // Synchronously compute the hash of the demo admin password for dev environment fallback
 const DEMO_ADMIN_PASSWORD_HASH = bcrypt.hashSync('Admin@123', 10);
@@ -31,7 +32,14 @@ const DEMO_CUSTOMER_USER = {
   updatedAt: new Date('2026-09-15T12:00:00Z'),
 };
 
-const inMemoryUsers = [DEMO_ADMIN_USER, DEMO_CUSTOMER_USER];
+const DEFAULT_USERS = [DEMO_ADMIN_USER, DEMO_CUSTOMER_USER];
+
+// Load persisted users from disk so accounts survive across deploys
+const inMemoryUsers = loadCollection('users', DEFAULT_USERS);
+
+function persistUsers() {
+  saveCollection('users', inMemoryUsers);
+}
 
 export function _getInMemoryUsers() {
   return inMemoryUsers;
@@ -211,6 +219,7 @@ export async function registerCustomer({ name, email, password, phone }) {
   }
 
   inMemoryUsers.push(newUser);
+  persistUsers();
 
   // 7. Generate JWT
   const token = generateToken({
@@ -436,6 +445,7 @@ export async function updateUserProfile(userId, { name, phone }) {
   user.name = trimmedName;
   user.phone = trimmedPhone;
   user.updatedAt = now;
+  persistUsers();
 
   return {
     id: user.id,

@@ -3,6 +3,7 @@ import prisma from '../config/db.js';
 import * as authService from './authService.js';
 import * as inventoryService from './inventoryService.js';
 import * as variantService from './variantService.js';
+import { loadCollection, saveCollection } from '../utils/fileStore.js';
 
 /**
  * Collections by Chandni - Order Service
@@ -16,7 +17,7 @@ import * as variantService from './variantService.js';
  */
 
 // Seeded in-memory store for orders
-const inMemoryOrders = [
+const INITIAL_SEED_ORDERS = [
   {
     id: 'order-seed-1',
     orderNumber: 'CBC-782103-4921',
@@ -466,6 +467,25 @@ const inMemoryOrders = [
   },
 ];
 
+// Load persisted orders from disk so they survive across deploys
+const inMemoryOrders = loadCollection('orders', INITIAL_SEED_ORDERS);
+
+export function persistOrders() {
+  saveCollection('orders', inMemoryOrders);
+}
+
+export function addOrderToStore(newOrder) {
+  const existingIdx = inMemoryOrders.findIndex(
+    (o) => o.id === newOrder.id || o.orderNumber === newOrder.orderNumber
+  );
+  if (existingIdx !== -1) {
+    inMemoryOrders[existingIdx] = { ...inMemoryOrders[existingIdx], ...newOrder };
+  } else {
+    inMemoryOrders.unshift(newOrder);
+  }
+  persistOrders();
+}
+
 export function _getInMemoryOrders() {
   return inMemoryOrders;
 }
@@ -542,19 +562,6 @@ export function sanitizeOrderForCustomer(order) {
     ...order,
     statusHistory: customerSafeHistory,
   };
-}
-
-/**
- * Saves a newly created order into the orders store
- */
-export function addOrderToStore(order) {
-  if (!order || !order.id) return;
-  const existingIdx = inMemoryOrders.findIndex((o) => o.id === order.id || o.orderNumber === order.orderNumber);
-  if (existingIdx !== -1) {
-    inMemoryOrders[existingIdx] = order;
-  } else {
-    inMemoryOrders.unshift(order);
-  }
 }
 
 /**

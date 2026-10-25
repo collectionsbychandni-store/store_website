@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import prisma from '../config/db.js';
+import { loadCollection, saveCollection } from '../utils/fileStore.js';
 
 /**
  * Collections by Chandni - Address Service
@@ -7,12 +8,12 @@ import prisma from '../config/db.js';
  * Implements Step 14:
  * - Customer Address Management (Add, Edit, Delete, Default, Type)
  * - Strict User Ownership Isolation
- * - Dual DB (Prisma) and In-Memory fallback support
+ * - Dual DB (Prisma) and Persistent File-Backed fallback support (Never lost on deploy)
  * - Automatic default promotion on creation & deletion
  */
 
-// In-Memory store for addresses
-const inMemoryAddresses = [
+// Initial Seed demo addresses
+const INITIAL_DEMO_ADDRESSES = [
   {
     id: 'addr-demo-1',
     userId: 'customer-demo-uuid-2',
@@ -48,6 +49,13 @@ const inMemoryAddresses = [
     updatedAt: new Date('2026-09-20T14:30:00Z'),
   },
 ];
+
+// Load persisted addresses from disk so data is preserved across deploys
+let inMemoryAddresses = loadCollection('addresses', INITIAL_DEMO_ADDRESSES);
+
+function persistAddresses() {
+  saveCollection('addresses', inMemoryAddresses);
+}
 
 export function _getInMemoryAddresses() {
   return inMemoryAddresses;
@@ -180,7 +188,15 @@ export async function getAddressesByUserId(userId) {
         where: { userId },
         orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
       });
-      return addresses;
+      if (addresses && addresses.length > 0) {
+        for (const addr of addresses) {
+          const idx = inMemoryAddresses.findIndex((a) => a.id === addr.id);
+          if (idx !== -1) inMemoryAddresses[idx] = addr;
+          else inMemoryAddresses.push(addr);
+        }
+        persistAddresses();
+        return addresses;
+      }
     } catch (e) {
       // In-memory fallback
     }
@@ -275,6 +291,24 @@ export async function createAddress({
   const dbConnected = await isDatabaseAlive();
   if (dbConnected) {
     try {
+      // Ensure user exists in PostgreSQL to avoid Foreign Key constraint violation
+      const userExists = await prisma.user.findUnique({ where: { id: userId } });
+      if (!userExists) {
+        await prisma.user.upsert({
+          where: { id: userId },
+          update: {},
+          create: {
+            id: userId,
+            name: name.trim(),
+            email: `${userId}@collectionsbychandni.in`,
+            passwordHash: 'N/A',
+            phone: phone.trim(),
+            role: 'CUSTOMER',
+            isActive: true,
+          },
+        });
+      }
+
       if (shouldBeDefault) {
         await prisma.address.updateMany({
           where: { userId },
@@ -285,9 +319,16 @@ export async function createAddress({
       const created = await prisma.address.create({
         data: newAddress,
       });
+
+      // Mirror to persistent memory store so it survives across deploys
+      const existingIdx = inMemoryAddresses.findIndex((a) => a.id === created.id);
+      if (existingIdx !== -1) inMemoryAddresses[existingIdx] = created;
+      else inMemoryAddresses.unshift(created);
+      persistAddresses();
+
       return created;
     } catch (e) {
-      // In-memory fallback
+      console.warn('PostgreSQL address create fallback to persistent store:', e.message);
     }
   }
 
@@ -301,6 +342,7 @@ export async function createAddress({
   }
 
   inMemoryAddresses.unshift(newAddress);
+  persistAddresses();
   return newAddress;
 }
 
@@ -370,6 +412,12 @@ export async function updateAddress({
           updatedAt: now,
         },
       });
+
+      // Mirror to persistent memory store
+      const memIdx = inMemoryAddresses.findIndex((a) => a.id === id);
+      if (memIdx !== -1) inMemoryAddresses[memIdx] = updated;
+      persistAddresses();
+
       return updated;
     } catch (e) {
       // In-memory fallback
@@ -405,6 +453,7 @@ export async function updateAddress({
   if (isDefault !== undefined) memoryAddr.isDefault = Boolean(isDefault);
   memoryAddr.updatedAt = now;
 
+  persistAddresses();
   return memoryAddr;
 }
 
@@ -446,6 +495,10 @@ export async function deleteAddress({ id, userId }) {
         }
       }
 
+      const memIdx = inMemoryAddresses.findIndex((a) => a.id === id);
+      if (memIdx !== -1) inMemoryAddresses.splice(memIdx, 1);
+      persistAddresses();
+
       return { success: true, message: 'Address deleted successfully' };
     } catch (e) {
       // In-memory fallback
@@ -470,6 +523,7 @@ export async function deleteAddress({ id, userId }) {
     }
   }
 
+  persistAddresses();
   return { success: true, message: 'Address deleted successfully' };
 }
 
@@ -502,6 +556,15 @@ export async function setDefaultAddress({ id, userId }) {
         where: { id },
         data: { isDefault: true, updatedAt: now },
       });
+
+      for (const addr of inMemoryAddresses) {
+        if (addr.userId === userId) {
+          addr.isDefault = addr.id === id;
+          addr.updatedAt = now;
+        }
+      }
+      persistAddresses();
+
       return updated;
     } catch (e) {
       // In-memory fallback
@@ -515,5 +578,6 @@ export async function setDefaultAddress({ id, userId }) {
     }
   }
 
+  persistAddresses();
   return existing;
 }

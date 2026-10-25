@@ -10,6 +10,7 @@ import payuConfig, {
   generateRefundHash,
   generateCheckActionStatusHash,
 } from '../config/payuConfig.js';
+import { loadCollection, saveCollection } from '../utils/fileStore.js';
 
 /**
  * Collections by Chandni - Returns, Refunds, Cancellations & RTO Management Service
@@ -27,9 +28,14 @@ import payuConfig, {
  * - Dual PostgreSQL (Prisma) and in-memory store persistence fallback
  */
 
-// In-memory collections for dev/preview resilience when local Postgres is not running
-const inMemoryReturnRequests = [];
-const inMemoryRefunds = [];
+// In-memory collections backed by disk storage for deploy persistence
+let inMemoryReturnRequests = loadCollection('returnRequests', []);
+let inMemoryRefunds = loadCollection('refunds', []);
+
+export function persistReturnsAndRefunds() {
+  saveCollection('returnRequests', inMemoryReturnRequests);
+  saveCollection('refunds', inMemoryRefunds);
+}
 
 // Configurable Return & Refund Policy Settings
 export const POLICY_CONFIG = {
@@ -444,6 +450,7 @@ export async function createReturnRequest({
         },
       });
       inMemoryReturnRequests.unshift(created);
+      persistReturnsAndRefunds();
       return created;
     } catch (dbErr) {
       console.warn('Prisma return creation fallback:', dbErr.message);
@@ -451,6 +458,7 @@ export async function createReturnRequest({
   }
 
   inMemoryReturnRequests.unshift(returnRecord);
+  persistReturnsAndRefunds();
   return returnRecord;
 }
 
@@ -938,6 +946,7 @@ export async function processRefund({
         },
       });
       inMemoryRefunds.unshift(created);
+      persistReturnsAndRefunds();
       return created;
     } catch (dbErr) {
       console.warn('Prisma refund creation fallback:', dbErr.message);
@@ -945,6 +954,7 @@ export async function processRefund({
   }
 
   inMemoryRefunds.unshift(refundRecord);
+  persistReturnsAndRefunds();
   return refundRecord;
 }
 

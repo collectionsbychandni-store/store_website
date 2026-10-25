@@ -1,5 +1,6 @@
 import prisma, { syncDatabaseSchema } from '../config/db.js';
 import * as categoryService from './categoryService.js';
+import { loadCollection, saveCollection } from '../utils/fileStore.js';
 
 /**
  * Utility: Generates a URL-friendly slug from title
@@ -161,7 +162,11 @@ const INITIAL_DEMO_PRODUCTS = [
   },
 ];
 
-let inMemoryProducts = [...INITIAL_DEMO_PRODUCTS];
+let inMemoryProducts = loadCollection('products', INITIAL_DEMO_PRODUCTS);
+
+export function persistProducts() {
+  saveCollection('products', inMemoryProducts);
+}
 
 export function _getInMemoryProducts() {
   return inMemoryProducts;
@@ -169,6 +174,7 @@ export function _getInMemoryProducts() {
 
 export function _setInMemoryProducts(updated) {
   inMemoryProducts = updated;
+  persistProducts();
 }
 
 let lastDbCheckTime = 0;
@@ -938,6 +944,7 @@ export async function createProduct({
   };
 
   inMemoryProducts.push(newProduct);
+  persistProducts();
   return await enrichProductInMemory(newProduct);
 }
 
@@ -1076,6 +1083,7 @@ export async function updateProduct(id, {
     ...inMemoryProducts[idx],
     ...updateData,
   };
+  persistProducts();
 
   return await enrichProductInMemory(inMemoryProducts[idx]);
 }
@@ -1163,6 +1171,7 @@ export async function deleteProduct(id) {
   }
 
   inMemoryProducts = inMemoryProducts.filter((p) => p.id !== id);
+  persistProducts();
   return true;
 }
 
