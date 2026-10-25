@@ -126,11 +126,12 @@ export async function createShipment(req, res) {
 export async function assignAwb(req, res) {
   try {
     const { shipmentId } = req.params;
-    const { courierId } = req.body || {};
+    const { courierId, simulateIfWalletEmpty } = req.body || {};
 
     const shipment = await shiprocketService.assignAwbAndCourier({
       shipmentId,
       courierId: courierId || undefined,
+      simulateIfWalletEmpty: Boolean(simulateIfWalletEmpty),
       adminUser: req.user,
     });
 
@@ -144,6 +145,8 @@ export async function assignAwb(req, res) {
     return res.status(status).json({
       success: false,
       message: error.message || 'Error assigning courier AWB',
+      code: error.code || undefined,
+      walletUrl: error.walletUrl || undefined,
     });
   }
 }

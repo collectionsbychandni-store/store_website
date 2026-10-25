@@ -63,6 +63,18 @@ export async function updateProfile(profileData) {
 }
 
 /**
+ * Changes password for authenticated user (admin or customer)
+ * @param {object} passwordData - { currentPassword, newPassword, confirmPassword }
+ * @returns {Promise<{ success: boolean, message: string }>}
+ */
+export async function changePassword({ currentPassword, newPassword, confirmPassword }) {
+  return await apiRequest('/api/auth/change-password', {
+    method: 'PUT',
+    body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
+  });
+}
+
+/**
  * Requests backend logout
  * @returns {Promise<{ success: boolean, message: string }>}
  */
@@ -78,5 +90,6 @@ export default {
   loginAdmin,
   getMe,
   updateProfile,
+  changePassword,
   logout,
 };

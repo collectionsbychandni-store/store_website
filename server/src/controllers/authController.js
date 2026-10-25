@@ -153,6 +153,37 @@ export async function updateProfile(req, res, next) {
 }
 
 /**
+ * PUT /api/auth/change-password
+ * Allows authenticated admin or user to change their account password
+ */
+export async function changePassword(req, res, next) {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required',
+      });
+    }
+
+    const { currentPassword, newPassword, confirmPassword } = req.body || {};
+
+    const result = await authService.changePassword(req.user.id, {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
+
+    return res.status(200).json(result);
+  } catch (error) {
+    const status = error.status || 500;
+    return res.status(status).json({
+      success: false,
+      message: error.message || 'Error changing password',
+    });
+  }
+}
+
+/**
  * POST /api/auth/logout
  */
 export async function logout(req, res, next) {

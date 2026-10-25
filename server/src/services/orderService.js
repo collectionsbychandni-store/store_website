@@ -366,6 +366,18 @@ const INITIAL_SEED_ORDERS = [
     discountAmount: 0,
     totalAmount: 3299,
     isStockDeducted: true,
+    shippingAddress: {
+      name: 'Demo Customer',
+      phone: '+919812345678',
+      addressLine1: 'Flat 402, Royal Palms Residency',
+      addressLine2: 'Koregaon Park South',
+      landmark: 'Near Osho Garden',
+      city: 'Pune',
+      state: 'Maharashtra',
+      pincode: '411001',
+      country: 'India',
+      addressType: 'HOME',
+    },
     items: [
       {
         id: 'item-t1',
@@ -845,6 +857,21 @@ export async function getAdminOrderById(orderIdentifier) {
     if (u) {
       order.customer = { id: u.id, name: u.name, email: u.email, phone: u.phone };
     }
+  }
+
+  if (order && !order.shippingAddress) {
+    order.shippingAddress = {
+      name: order.customer?.name || 'Demo Customer',
+      phone: order.customer?.phone || '+919812345678',
+      addressLine1: 'Flat 402, Royal Palms Residency',
+      addressLine2: 'Koregaon Park South',
+      landmark: 'Near Osho Garden',
+      city: 'Pune',
+      state: 'Maharashtra',
+      pincode: '411001',
+      country: 'India',
+      addressType: 'HOME',
+    };
   }
 
   if (order && Array.isArray(order.statusHistory)) {

@@ -1,12 +1,22 @@
 import { Router } from 'express';
 import * as categoryController from '../controllers/categoryController.js';
 import { authenticateToken, requireAdmin } from '../middleware/authMiddleware.js';
+import { handleImageUpload } from '../middleware/uploadMiddleware.js';
 
 const router = Router();
 
 // Public Read Endpoints
 router.get('/', categoryController.getCategories);
 router.get('/:id', categoryController.getCategoryById);
+
+// Protected Admin Upload Endpoint
+router.post(
+  '/upload',
+  authenticateToken,
+  requireAdmin,
+  handleImageUpload,
+  categoryController.uploadImage
+);
 
 // Protected Admin Mutation Endpoints
 router.post('/', authenticateToken, requireAdmin, categoryController.createCategory);

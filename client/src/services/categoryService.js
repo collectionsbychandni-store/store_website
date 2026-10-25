@@ -86,6 +86,39 @@ export async function deleteCategory(id) {
   });
 }
 
+/**
+ * Uploads a category image file to the server (max 5 MB, JPEG/PNG/WebP)
+ * @param {File} file
+ * @returns {Promise<{ success: boolean, data: { imageUrl: string, publicId?: string } }>}
+ */
+export async function uploadCategoryImage(file) {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const token = localStorage.getItem('cbc_auth_token');
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const res = await fetch('/api/categories/upload', {
+    method: 'POST',
+    headers,
+    body: formData,
+    credentials: 'same-origin',
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    const err = new Error(data.message || 'Image upload failed');
+    err.status = res.status;
+    err.code = data.code;
+    throw err;
+  }
+
+  return data;
+}
+
 export default {
   getCategories,
   getCategoryById,
@@ -93,4 +126,6 @@ export default {
   updateCategory,
   updateCategoryStatus,
   deleteCategory,
+  uploadCategoryImage,
 };
+

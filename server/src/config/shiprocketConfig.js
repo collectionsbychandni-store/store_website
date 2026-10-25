@@ -13,7 +13,8 @@ export const SHIPROCKET_BASE_URL = 'https://apiv2.shiprocket.in/v1/external';
 export const SHIPROCKET_ENV = process.env.SHIPROCKET_ENV || 'test';
 export const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL || '';
 export const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD || '';
-export const SHIPROCKET_PICKUP_LOCATION = process.env.SHIPROCKET_PICKUP_LOCATION || 'Primary';
+export const SHIPROCKET_PICKUP_LOCATION = process.env.SHIPROCKET_PICKUP_LOCATION || 'Collections by Chandni';
+export const SHIPROCKET_PICKUP_PINCODE = process.env.SHIPROCKET_PICKUP_PINCODE || '502032';
 export const SHIPROCKET_WEBHOOK_SECRET = process.env.SHIPROCKET_WEBHOOK_SECRET || '';
 
 // Default package configuration for luxury Indian apparel & sarees

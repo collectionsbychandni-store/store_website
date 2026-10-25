@@ -177,3 +177,46 @@ export async function deleteCategory(req, res, next) {
     });
   }
 }
+
+/**
+ * POST /api/categories/upload
+ * Requires Authentication + Admin
+ * Uploads a category image (Cloudinary or local static storage fallback)
+ */
+export async function uploadImage(req, res, next) {
+  try {
+    const file = req.file || (req.uploadedFiles && req.uploadedFiles[0]);
+    if (!file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No image file was provided for upload.',
+        code: 'NO_FILE_PROVIDED',
+      });
+    }
+
+    const result = await categoryService.uploadCategoryImage(file);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Category image uploaded successfully',
+      data: result,
+    });
+  } catch (error) {
+    const status = error.status || 500;
+    return res.status(status).json({
+      success: false,
+      message: error.message || 'Category image upload failed',
+      code: error.code || 'UPLOAD_FAILED',
+    });
+  }
+}
+
+export default {
+  getCategories,
+  getCategoryById,
+  createCategory,
+  updateCategory,
+  updateCategoryStatus,
+  deleteCategory,
+  uploadImage,
+};

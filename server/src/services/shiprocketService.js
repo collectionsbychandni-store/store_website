@@ -5,6 +5,7 @@ import {
   SHIPROCKET_EMAIL,
   SHIPROCKET_PASSWORD,
   SHIPROCKET_PICKUP_LOCATION,
+  SHIPROCKET_PICKUP_PINCODE,
   SHIPROCKET_WEBHOOK_SECRET,
   SHIPROCKET_ENV,
   DEFAULT_PACKAGE,
@@ -250,7 +251,7 @@ async function shiprocketFetch(path, options = {}) {
  * ---------------------------------------------------------------------------
  */
 export async function checkCourierServiceability({
-  pickupPostcode = '411001',
+  pickupPostcode = SHIPROCKET_PICKUP_PINCODE,
   deliveryPostcode,
   weight = DEFAULT_PACKAGE.weight,
   isCod = false,
@@ -461,10 +462,26 @@ export async function createShipmentForOrder({
 
   safeLog(`Creating adhoc order on Shiprocket for ${order.orderNumber}...`);
 
-  const response = await shiprocketFetch('/orders/create/adhoc', {
+  let response = await shiprocketFetch('/orders/create/adhoc', {
     method: 'POST',
     body: JSON.stringify(requestPayload),
   });
+
+  // Auto-recovery: If wrong pickup location error was returned and suggestions were provided by Shiprocket API
+  if (
+    (!response.order_id && !response.shipment_id) &&
+    response?.data?.data &&
+    Array.isArray(response.data.data) &&
+    response.data.data[0]?.pickup_location
+  ) {
+    const suggestedLocation = response.data.data[0].pickup_location;
+    safeLog(`Shiprocket suggested valid pickup location: ${suggestedLocation}. Retrying order creation...`);
+    requestPayload.pickup_location = suggestedLocation;
+    response = await shiprocketFetch('/orders/create/adhoc', {
+      method: 'POST',
+      body: JSON.stringify(requestPayload),
+    });
+  }
 
   const srOrderId = String(response.order_id || '');
   const srShipmentId = String(response.shipment_id || '');
@@ -533,7 +550,7 @@ export async function createShipmentForOrder({
  * ASSIGN COURIER & GENERATE AWB
  * ---------------------------------------------------------------------------
  */
-export async function assignAwbAndCourier({ shipmentId, courierId, adminUser }) {
+export async function assignAwbAndCourier({ shipmentId, courierId, simulateIfWalletEmpty = false, adminUser }) {
   const shipment = await getShipmentById(shipmentId);
   if (!shipment) {
     const err = new Error('Shipment record not found');
@@ -562,10 +579,40 @@ export async function assignAwbAndCourier({ shipmentId, courierId, adminUser }) 
 
   safeLog(`Assigning AWB for Shiprocket shipment ${shipment.shiprocketShipmentId}...`);
 
-  const response = await shiprocketFetch('/courier/assign/awb', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
+  let response;
+  let isSimulated = false;
+
+  if (simulateIfWalletEmpty) {
+    isSimulated = true;
+    const mockAwb = `SR${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+    response = {
+      isSimulated: true,
+      response: {
+        data: {
+          awb_code: mockAwb,
+          courier_company_id: courierId || 10,
+          courier_name: 'Delhivery Surface (Demo/Sandbox)',
+        },
+      },
+    };
+  } else {
+    try {
+      response = await shiprocketFetch('/courier/assign/awb', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    } catch (apiError) {
+      const isWalletError =
+        apiError.message?.toLowerCase().includes('wallet') ||
+        apiError.details?.message?.toLowerCase().includes('wallet');
+
+      if (isWalletError) {
+        apiError.code = 'WALLET_RECHARGE_REQUIRED';
+        apiError.walletUrl = 'https://app.shiprocket.in/recharge-wallet';
+      }
+      throw apiError;
+    }
+  }
 
   const awbData =
     response?.response?.data ||
@@ -577,11 +624,16 @@ export async function assignAwbAndCourier({ shipmentId, courierId, adminUser }) 
   const courierName = awbData.courier_name || shipment.courierName || 'Shiprocket Partner Courier';
 
   if (!awbCode) {
+    const isWallet = response.message?.toLowerCase().includes('wallet');
     const err = new Error(
       response.message || 'Shiprocket could not assign an AWB for this shipment. Please select a different courier.'
     );
     err.status = 502;
     err.details = response;
+    if (isWallet) {
+      err.code = 'WALLET_RECHARGE_REQUIRED';
+      err.walletUrl = 'https://app.shiprocket.in/recharge-wallet';
+    }
     throw err;
   }
 
@@ -593,6 +645,7 @@ export async function assignAwbAndCourier({ shipmentId, courierId, adminUser }) 
     status: 'AWB_ASSIGNED',
     metadata: {
       ...(shipment.metadata || {}),
+      isSimulated,
       awbAssignResponse: response,
     },
   });
@@ -646,6 +699,16 @@ export async function scheduleShipmentPickup({ shipmentId, pickupDate, adminUser
   const mm = String(targetDate.getMonth() + 1).padStart(2, '0');
   const dd = String(targetDate.getDate()).padStart(2, '0');
   const formattedPickupDate = `${yyyy}-${mm}-${dd}`;
+
+  if (shipment.metadata?.isSimulated) {
+    const updatedShipment = await updateShipmentRecord(shipment.id, {
+      pickupStatus: 'SCHEDULED',
+      pickupScheduledDate: targetDate,
+      pickupTokenNumber: `SIM-PU-${Date.now().toString().slice(-6)}`,
+      status: 'PICKUP_SCHEDULED',
+    });
+    return updatedShipment;
+  }
 
   safeLog(`Scheduling pickup for shipment ${shipment.shiprocketShipmentId} on ${formattedPickupDate}...`);
 
@@ -701,6 +764,22 @@ export async function generateShippingLabel({ shipmentId }) {
     throw err;
   }
 
+  if (shipment.metadata?.isSimulated) {
+    const demoLabelUrl = `https://shiprocket.co//tracking/${shipment.awbCode}`;
+    const updated = await updateShipmentRecord(shipment.id, {
+      labelUrl: demoLabelUrl,
+      metadata: {
+        ...(shipment.metadata || {}),
+        labelCreatedTime: new Date().toISOString(),
+      },
+    });
+    return {
+      success: true,
+      labelUrl: demoLabelUrl,
+      shipment: updated,
+    };
+  }
+
   safeLog(`Generating shipping label for shipment ${shipment.shiprocketShipmentId}...`);
 
   const response = await shiprocketFetch('/courier/generate/label', {
@@ -752,6 +831,18 @@ export async function generateManifest({ shipmentId }) {
     const err = new Error('Shiprocket shipment ID required for manifest');
     err.status = 400;
     throw err;
+  }
+
+  if (shipment.metadata?.isSimulated) {
+    const demoManifestUrl = `https://shiprocket.co//tracking/${shipment.awbCode}`;
+    const updated = await updateShipmentRecord(shipment.id, {
+      manifestUrl: demoManifestUrl,
+    });
+    return {
+      success: true,
+      manifestUrl: demoManifestUrl,
+      shipment: updated,
+    };
   }
 
   safeLog(`Generating manifest for shipment ${shipment.shiprocketShipmentId}...`);
@@ -816,6 +907,21 @@ export async function trackShipment({ shipmentId, awbCode }) {
     const err = new Error('An AWB code or shipment with assigned AWB is required to track.');
     err.status = 400;
     throw err;
+  }
+
+  if (shipment?.metadata?.isSimulated) {
+    return {
+      currentStatus: 'IN_TRANSIT',
+      latestActivity: 'Consignment in transit to patron destination',
+      latestActivityTime: new Date().toISOString(),
+      trackingUrl: `https://shiprocket.co//tracking/${targetAwb}`,
+      activities: [
+        { activity: 'Consignment Created with Shiprocket', location: 'Medak, Telangana', date: shipment.createdAt },
+        { activity: 'AWB Assigned to Courier Partner', location: 'Medak, Telangana', date: shipment.updatedAt },
+        { activity: 'Parcel scanned at Hub & In Transit', location: 'Hyderabad, Telangana', date: new Date().toISOString() },
+      ],
+      shipment,
+    };
   }
 
   safeLog(`Tracking AWB ${targetAwb}...`);

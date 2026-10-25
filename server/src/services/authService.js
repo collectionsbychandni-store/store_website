@@ -457,3 +457,108 @@ export async function updateUserProfile(userId, { name, phone }) {
     updatedAt: user.updatedAt,
   };
 }
+
+/**
+ * Changes password for an authenticated user (admin or customer)
+ * Verifies current password against stored hash and persists new bcrypt hash.
+ */
+export async function changePassword(userId, { currentPassword, newPassword, confirmPassword }) {
+  if (!userId) {
+    const error = new Error('Authentication required');
+    error.status = 401;
+    throw error;
+  }
+
+  if (!currentPassword || typeof currentPassword !== 'string') {
+    const error = new Error('Current password is required');
+    error.status = 400;
+    throw error;
+  }
+
+  if (!newPassword || typeof newPassword !== 'string') {
+    const error = new Error('New password is required');
+    error.status = 400;
+    throw error;
+  }
+
+  if (newPassword.length < 8) {
+    const error = new Error('New password must be at least 8 characters long');
+    error.status = 400;
+    throw error;
+  }
+
+  if (confirmPassword !== undefined && newPassword !== confirmPassword) {
+    const error = new Error('New password and confirmation password do not match');
+    error.status = 400;
+    throw error;
+  }
+
+  if (currentPassword === newPassword) {
+    const error = new Error('New password cannot be the same as your current password');
+    error.status = 400;
+    throw error;
+  }
+
+  const dbConnected = await isDatabaseAlive();
+  let userRecord = null;
+
+  if (dbConnected) {
+    try {
+      userRecord = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+    } catch (e) {
+      // In-memory fallback
+    }
+  }
+
+  if (!userRecord) {
+    userRecord = inMemoryUsers.find((u) => u.id === userId);
+  }
+
+  if (!userRecord || !userRecord.isActive) {
+    const error = new Error('User account not found or inactive');
+    error.status = 404;
+    throw error;
+  }
+
+  // Verify current password
+  const isMatch = await comparePassword(currentPassword, userRecord.passwordHash);
+  if (!isMatch) {
+    const error = new Error('Current password is incorrect');
+    error.status = 400;
+    throw error;
+  }
+
+  // Hash new password using bcrypt
+  const newHash = await hashPassword(newPassword);
+  const now = new Date();
+
+  // Persist in DB if connected
+  if (dbConnected) {
+    try {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          passwordHash: newHash,
+          updatedAt: now,
+        },
+      });
+    } catch (e) {
+      // In-memory fallback
+    }
+  }
+
+  // Also update in-memory user and persist to disk
+  const memoryUser = inMemoryUsers.find((u) => u.id === userId);
+  if (memoryUser) {
+    memoryUser.passwordHash = newHash;
+    memoryUser.updatedAt = now;
+    persistUsers();
+  }
+
+  return {
+    success: true,
+    message: 'Password changed successfully',
+  };
+}

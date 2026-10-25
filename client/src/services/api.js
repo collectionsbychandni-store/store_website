@@ -144,6 +144,7 @@ export async function apiRequest(endpoint, options = {}) {
     const error = new Error(errorMessage);
     error.status = response.status;
     error.data = data;
+    error.response = { data, status: response.status, headers: response.headers };
     throw error;
   }
 
@@ -180,7 +181,55 @@ export async function checkDatabaseHealth() {
   }
 }
 
-export default {
+function normalizeUrl(endpoint) {
+  if (endpoint.startsWith('/api') || endpoint.startsWith('http')) {
+    return endpoint;
+  }
+  return `/api${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+}
+
+export const api = {
+  request: apiRequest,
+  get: (endpoint, options = {}) => {
+    let url = normalizeUrl(endpoint);
+    if (options.params) {
+      const qs = new URLSearchParams();
+      Object.entries(options.params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null && v !== '') {
+          qs.append(k, String(v));
+        }
+      });
+      const queryStr = qs.toString();
+      if (queryStr) {
+        url += (url.includes('?') ? '&' : '?') + queryStr;
+      }
+    }
+    return apiRequest(url, { ...options, method: 'GET' });
+  },
+  post: (endpoint, body, options = {}) => {
+    return apiRequest(normalizeUrl(endpoint), {
+      ...options,
+      method: 'POST',
+      body: body instanceof FormData ? body : JSON.stringify(body || {}),
+    });
+  },
+  put: (endpoint, body, options = {}) => {
+    return apiRequest(normalizeUrl(endpoint), {
+      ...options,
+      method: 'PUT',
+      body: body instanceof FormData ? body : JSON.stringify(body || {}),
+    });
+  },
+  patch: (endpoint, body, options = {}) => {
+    return apiRequest(normalizeUrl(endpoint), {
+      ...options,
+      method: 'PATCH',
+      body: body instanceof FormData ? body : JSON.stringify(body || {}),
+    });
+  },
+  delete: (endpoint, options = {}) => {
+    return apiRequest(normalizeUrl(endpoint), { ...options, method: 'DELETE' });
+  },
   apiRequest,
   getStoredToken,
   setStoredToken,
@@ -188,3 +237,5 @@ export default {
   checkApiHealth,
   checkDatabaseHealth,
 };
+
+export default api;

@@ -35,6 +35,10 @@ async function startServer() {
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+  // Serve static uploads (for locally uploaded assets like categories & banners)
+  const uploadsPath = path.resolve(__dirname, 'public/uploads');
+  app.use('/uploads', express.static(uploadsPath));
+
   // Mount backend API routes under /api
   app.use('/api', apiRoutes);
 

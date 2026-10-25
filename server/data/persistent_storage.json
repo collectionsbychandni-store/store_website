@@ -1,0 +1,204 @@
+{
+  "categories": [
+    {
+      "id": "cat-women",
+      "name": "Women",
+      "slug": "women",
+      "description": "Exclusive women couture, ready-to-wear, and handcrafted ethnic styles.",
+      "imageUrl": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop",
+      "parentId": null,
+      "isActive": true,
+      "createdAt": "2026-09-29T10:00:00.000Z",
+      "updatedAt": "2026-09-29T10:00:00.000Z"
+    },
+    {
+      "id": "cat-jewellery",
+      "name": "Jewellery",
+      "slug": "jewellery",
+      "description": "Bespoke artisanal jewellery, heritage ornaments, and contemporary accents.",
+      "imageUrl": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800&auto=format&fit=crop",
+      "parentId": null,
+      "isActive": true,
+      "createdAt": "2026-09-29T10:05:00.000Z",
+      "updatedAt": "2026-09-29T10:05:00.000Z"
+    },
+    {
+      "id": "cat-accessories",
+      "name": "Accessories",
+      "slug": "accessories",
+      "description": "Handcrafted dupattas, stoles, potlis, and styling accoutrements.",
+      "imageUrl": "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=800&auto=format&fit=crop",
+      "parentId": null,
+      "isActive": true,
+      "createdAt": "2026-09-29T10:10:00.000Z",
+      "updatedAt": "2026-09-29T10:10:00.000Z"
+    },
+    {
+      "id": "cat-kurtis",
+      "name": "Kurtis",
+      "slug": "kurtis",
+      "description": "Designer daily wear, flared anarkalis, and tunic kurtis.",
+      "imageUrl": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop",
+      "parentId": "cat-women",
+      "isActive": true,
+      "createdAt": "2026-09-29T10:15:00.000Z",
+      "updatedAt": "2026-09-29T10:15:00.000Z"
+    },
+    {
+      "id": "cat-dresses",
+      "name": "Dresses",
+      "slug": "dresses",
+      "description": "Fusion festive gowns, floral sundresses, and evening ensembles.",
+      "imageUrl": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop",
+      "parentId": "cat-women",
+      "isActive": true,
+      "createdAt": "2026-09-29T10:20:00.000Z",
+      "updatedAt": "2026-09-29T10:20:00.000Z"
+    },
+    {
+      "id": "cat-sarees",
+      "name": "Sarees",
+      "slug": "sarees",
+      "description": "Banarasi silks, chanderi weaves, organza drapes, and modern georgettes.",
+      "imageUrl": "https://images.unsplash.com/photo-1610030469668-932d04a7be65?q=80&w=800&auto=format&fit=crop",
+      "parentId": "cat-women",
+      "isActive": true,
+      "createdAt": "2026-09-29T10:25:00.000Z",
+      "updatedAt": "2026-09-29T10:25:00.000Z"
+    },
+    {
+      "id": "cat-tops",
+      "name": "Tops",
+      "slug": "tops",
+      "description": "Contemporary shirts, peplum blouses, and artisanal tunics.",
+      "imageUrl": "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=800&auto=format&fit=crop",
+      "parentId": "cat-women",
+      "isActive": true,
+      "createdAt": "2026-09-29T10:30:00.000Z",
+      "updatedAt": "2026-09-29T10:30:00.000Z"
+    },
+    {
+      "id": "cat-bottom-wear",
+      "name": "Bottom Wear",
+      "slug": "bottom-wear",
+      "description": "Palazzos, cigarette trousers, tulip pants, and flared shararas.",
+      "imageUrl": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=800&auto=format&fit=crop",
+      "parentId": "cat-women",
+      "isActive": true,
+      "createdAt": "2026-09-29T10:35:00.000Z",
+      "updatedAt": "2026-09-29T10:35:00.000Z"
+    },
+    {
+      "id": "cat-earrings",
+      "name": "Earrings",
+      "slug": "earrings",
+      "description": "Kundan chandbalis, jhumkas, and delicate modern studs.",
+      "imageUrl": "https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=800&auto=format&fit=crop",
+      "parentId": "cat-jewellery",
+      "isActive": true,
+      "createdAt": "2026-09-29T10:40:00.000Z",
+      "updatedAt": "2026-09-29T10:40:00.000Z"
+    },
+    {
+      "id": "cat-necklaces",
+      "name": "Necklaces",
+      "slug": "necklaces",
+      "description": "Polki chokers, temple necklaces, and minimalist layering chains.",
+      "imageUrl": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800&auto=format&fit=crop",
+      "parentId": "cat-jewellery",
+      "isActive": true,
+      "createdAt": "2026-09-29T10:45:00.000Z",
+      "updatedAt": "2026-09-29T10:45:00.000Z"
+    },
+    {
+      "id": "cat-bangles",
+      "name": "Bangles",
+      "slug": "bangles",
+      "description": "Meenakari kadas, gold-plated bangles, and stone-encrusted bracelets.",
+      "imageUrl": "https://images.unsplash.com/photo-1611591475152-4735490714b9?q=80&w=800&auto=format&fit=crop",
+      "parentId": "cat-jewellery",
+      "isActive": true,
+      "createdAt": "2026-09-29T10:50:00.000Z",
+      "updatedAt": "2026-09-29T10:50:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "admin-seed-uuid-1",
+      "name": "Collections by Chandni Admin",
+      "email": "admin@collectionsbychandni.in",
+      "phone": "+919876543210",
+      "role": "ADMIN",
+      "isActive": true,
+      "passwordHash": "$2b$10$zC94NfGztt94.IH/INvmmuEIOtM1m.9bZXGdIrRpgvQxFGtcH7NCC",
+      "createdAt": "2026-09-01T10:00:00.000Z",
+      "updatedAt": "2026-10-25T12:28:19.105Z"
+    },
+    {
+      "id": "customer-demo-uuid-2",
+      "name": "Demo Customer",
+      "email": "customer@collectionsbychandni.in",
+      "phone": "+919812345678",
+      "role": "CUSTOMER",
+      "isActive": true,
+      "passwordHash": "$2b$10$pN5vGTlFr1enOOKkrNo80.4jKldlynKRABeQc67WmkzF7pYTdF9.y",
+      "createdAt": "2026-09-15T12:00:00.000Z",
+      "updatedAt": "2026-09-15T12:00:00.000Z"
+    },
+    {
+      "id": "customer-seed-priya",
+      "name": "Priya Sharma",
+      "email": "priya.sharma@example.com",
+      "phone": "+919820123456",
+      "role": "CUSTOMER",
+      "isActive": true,
+      "createdAt": "2026-10-02T10:30:00.000Z",
+      "updatedAt": "2026-10-02T10:30:00.000Z",
+      "passwordHash": "$2b$10$pN5vGTlFr1enOOKkrNo80.4jKldlynKRABeQc67WmkzF7pYTdF9.y"
+    },
+    {
+      "id": "customer-seed-ananya",
+      "name": "Ananya Desai",
+      "email": "ananya.desai@example.com",
+      "phone": "+919876112233",
+      "role": "CUSTOMER",
+      "isActive": true,
+      "createdAt": "2026-10-05T14:15:00.000Z",
+      "updatedAt": "2026-10-05T14:15:00.000Z",
+      "passwordHash": "$2b$10$pN5vGTlFr1enOOKkrNo80.4jKldlynKRABeQc67WmkzF7pYTdF9.y"
+    },
+    {
+      "id": "customer-seed-rohit",
+      "name": "Rohit Verma",
+      "email": "rohit.verma@example.com",
+      "phone": "+919833445566",
+      "role": "CUSTOMER",
+      "isActive": false,
+      "createdAt": "2026-09-28T09:00:00.000Z",
+      "updatedAt": "2026-10-10T11:20:00.000Z",
+      "passwordHash": "$2b$10$pN5vGTlFr1enOOKkrNo80.4jKldlynKRABeQc67WmkzF7pYTdF9.y"
+    },
+    {
+      "id": "customer-seed-meera",
+      "name": "Meera Iyer",
+      "email": "meera.iyer@example.com",
+      "phone": "+919844556677",
+      "role": "CUSTOMER",
+      "isActive": true,
+      "createdAt": "2026-10-12T16:00:00.000Z",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "passwordHash": "$2b$10$pN5vGTlFr1enOOKkrNo80.4jKldlynKRABeQc67WmkzF7pYTdF9.y"
+    },
+    {
+      "id": "customer-seed-kavita",
+      "name": "Kavita Patel",
+      "email": "kavita.patel@example.com",
+      "phone": "+919811223344",
+      "role": "CUSTOMER",
+      "isActive": true,
+      "createdAt": "2026-10-14T11:45:00.000Z",
+      "updatedAt": "2026-10-14T11:45:00.000Z",
+      "passwordHash": "$2b$10$pN5vGTlFr1enOOKkrNo80.4jKldlynKRABeQc67WmkzF7pYTdF9.y"
+    }
+  ]
+}

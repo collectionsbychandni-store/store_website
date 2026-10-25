@@ -404,18 +404,19 @@ export default function CategoryManagement() {
                       <tr key={cat.id} className="hover:bg-stone-50/60 transition-colors">
                         {/* Image Thumbnail */}
                         <td className="py-3 pl-6 pr-3 whitespace-nowrap">
-                          <div className="h-11 w-11 rounded-lg overflow-hidden bg-stone-100 border border-stone-200/80 shrink-0">
+                          <div className="relative group/thumb h-12 w-12 rounded-lg overflow-hidden bg-stone-100 border border-stone-200/80 shrink-0 shadow-2xs">
                             {cat.imageUrl ? (
                               <img
                                 src={cat.imageUrl}
                                 alt={cat.name}
-                                className="h-full w-full object-cover"
+                                className="h-full w-full object-cover transition-transform group-hover/thumb:scale-110"
                                 onError={(e) => {
-                                  e.target.style.display = 'none';
+                                  e.target.onerror = null;
+                                  e.target.src = 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=400&auto=format&fit=crop';
                                 }}
                               />
                             ) : (
-                              <div className="flex h-full w-full items-center justify-center text-stone-400">
+                              <div className="flex h-full w-full items-center justify-center text-stone-400 bg-stone-50" title="No image uploaded">
                                 <ImageIcon size={16} />
                               </div>
                             )}

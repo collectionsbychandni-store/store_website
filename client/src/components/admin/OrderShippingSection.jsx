@@ -203,12 +203,13 @@ export default function OrderShippingSection({ order, onOrderUpdated }) {
   };
 
   // Assign AWB & Courier
-  const handleAssignAwb = async (shipmentId) => {
+  const handleAssignAwb = async (shipmentId, { simulate = false } = {}) => {
     setIsAssigningAwb(true);
     setFeedback(null);
     try {
       const res = await shippingService.assignAwb(shipmentId, {
         courierId: selectedCourierId ? parseInt(selectedCourierId, 10) : undefined,
+        simulateIfWalletEmpty: simulate,
       });
 
       setFeedback({
@@ -218,9 +219,17 @@ export default function OrderShippingSection({ order, onOrderUpdated }) {
       await loadShipments();
       if (onOrderUpdated) onOrderUpdated();
     } catch (err) {
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to assign AWB';
+      const isWallet =
+        err.response?.data?.code === 'WALLET_RECHARGE_REQUIRED' ||
+        errorMsg.toLowerCase().includes('wallet');
+
       setFeedback({
         type: 'error',
-        message: err.response?.data?.message || err.message || 'Failed to assign AWB',
+        message: errorMsg,
+        isWalletError: isWallet,
+        walletUrl: err.response?.data?.walletUrl || 'https://app.shiprocket.in/recharge-wallet',
+        shipmentId,
       });
     } finally {
       setIsAssigningAwb(false);
@@ -504,25 +513,50 @@ export default function OrderShippingSection({ order, onOrderUpdated }) {
       {/* Feedback Messages */}
       {feedback && (
         <div
-          className={`p-3 rounded-xs text-xs flex items-start gap-2 ${
+          className={`p-3 rounded-xs text-xs flex flex-col gap-2 ${
             feedback.type === 'success'
               ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
               : 'bg-rose-50 text-rose-900 border border-rose-200'
           }`}
         >
-          {feedback.type === 'success' ? (
-            <CheckCircle2 size={15} className="text-emerald-600 shrink-0 mt-0.5" />
-          ) : (
-            <AlertCircle size={15} className="text-rose-600 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-2 w-full">
+            {feedback.type === 'success' ? (
+              <CheckCircle2 size={15} className="text-emerald-600 shrink-0 mt-0.5" />
+            ) : (
+              <AlertCircle size={15} className="text-rose-600 shrink-0 mt-0.5" />
+            )}
+            <span className="flex-1 font-light">{feedback.message}</span>
+            <button
+              type="button"
+              onClick={() => setFeedback(null)}
+              className="text-stone-400 hover:text-stone-700 text-xs"
+            >
+              <X size={13} />
+            </button>
+          </div>
+
+          {feedback.isWalletError && (
+            <div className="mt-1 pt-2 border-t border-rose-200/70 flex flex-wrap items-center gap-2">
+              <a
+                href={feedback.walletUrl || 'https://app.shiprocket.in/recharge-wallet'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#781D42] hover:bg-[#5B1123] text-amber-50 rounded-xs text-[11px] font-semibold uppercase tracking-wider"
+              >
+                <span>Recharge Shiprocket Wallet (₹100 min)</span>
+                <ExternalLink size={11} />
+              </a>
+              <button
+                type="button"
+                onClick={() =>
+                  handleAssignAwb(feedback.shipmentId || activeForwardShipment?.id, { simulate: true })
+                }
+                className="inline-flex items-center gap-1 px-3 py-1 bg-stone-900 hover:bg-stone-800 text-stone-100 rounded-xs text-[11px] font-semibold uppercase tracking-wider"
+              >
+                <span>Generate Demo / Sandbox AWB</span>
+              </button>
+            </div>
           )}
-          <span className="flex-1 font-light">{feedback.message}</span>
-          <button
-            type="button"
-            onClick={() => setFeedback(null)}
-            className="text-stone-400 hover:text-stone-700 text-xs"
-          >
-            <X size={13} />
-          </button>
         </div>
       )}
 
@@ -603,15 +637,27 @@ export default function OrderShippingSection({ order, onOrderUpdated }) {
           <div className="flex flex-wrap items-center gap-2 pt-2">
             {/* If no AWB, show assign AWB */}
             {!activeForwardShipment.awbCode && (
-              <button
-                type="button"
-                disabled={isAssigningAwb}
-                onClick={() => handleAssignAwb(activeForwardShipment.id)}
-                className="px-3 py-1.5 bg-[#781D42] text-amber-50 hover:bg-[#5B1123] rounded-xs text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5"
-              >
-                {isAssigningAwb ? <RefreshCw size={12} className="animate-spin" /> : <Send size={12} />}
-                <span>Assign AWB & Courier</span>
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  disabled={isAssigningAwb}
+                  onClick={() => handleAssignAwb(activeForwardShipment.id)}
+                  className="px-3 py-1.5 bg-[#781D42] text-amber-50 hover:bg-[#5B1123] rounded-xs text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5"
+                  title="Assign live courier & generate official AWB (requires recharged Shiprocket wallet)"
+                >
+                  {isAssigningAwb ? <RefreshCw size={12} className="animate-spin" /> : <Send size={12} />}
+                  <span>Assign AWB & Courier</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={isAssigningAwb}
+                  onClick={() => handleAssignAwb(activeForwardShipment.id, { simulate: true })}
+                  className="px-2.5 py-1.5 bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-300 rounded-xs text-[11px] font-medium flex items-center gap-1"
+                  title="Assign sandbox demo AWB to test label, pickup scheduling, and tracking without wallet freight deductions"
+                >
+                  <span>Test / Sandbox AWB</span>
+                </button>
+              </div>
             )}
 
             {/* If AWB assigned, show pickup scheduling if not scheduled */}

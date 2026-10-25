@@ -1,4 +1,4 @@
-import api from './api';
+import { apiRequest } from './api';
 
 /**
  * Collections by Chandni - Shipping & Logistics API Client (Shiprocket)
@@ -24,88 +24,111 @@ import api from './api';
  * Get sanitized Shiprocket provider configuration
  */
 export async function getShippingConfig() {
-  const response = await api.get('/shipping/config');
-  return response.data;
+  return await apiRequest('/api/shipping/config', {
+    method: 'GET',
+  });
 }
 
 /**
  * Check courier serviceability and shipping rates for an order's delivery address
  */
 export async function checkServiceability(orderId, params = {}) {
-  const response = await api.get(`/shipping/orders/${orderId}/serviceability`, { params });
-  return response.data;
+  const qs = new URLSearchParams();
+  if (params.weight !== undefined && params.weight !== null) qs.append('weight', String(params.weight));
+  if (params.cod !== undefined && params.cod !== null) qs.append('cod', params.cod ? '1' : '0');
+  const queryStr = qs.toString() ? `?${qs.toString()}` : '';
+  return await apiRequest(`/api/shipping/orders/${encodeURIComponent(orderId)}/serviceability${queryStr}`, {
+    method: 'GET',
+  });
 }
 
 /**
  * Book forward consignment with Shiprocket
  */
 export async function createShipment(orderId, packageData = {}) {
-  const response = await api.post(`/shipping/orders/${orderId}/create`, packageData);
-  return response.data;
+  return await apiRequest(`/api/shipping/orders/${encodeURIComponent(orderId)}/create`, {
+    method: 'POST',
+    body: JSON.stringify(packageData),
+  });
 }
 
 /**
  * Fetch all forward and reverse shipments for an order
  */
 export async function getOrderShipments(orderId) {
-  const response = await api.get(`/shipping/orders/${orderId}/shipments`);
-  return response.data;
+  return await apiRequest(`/api/shipping/orders/${encodeURIComponent(orderId)}/shipments`, {
+    method: 'GET',
+  });
 }
 
 /**
  * Assign courier and generate AWB code for shipment
  */
 export async function assignAwb(shipmentId, data = {}) {
-  const response = await api.post(`/shipping/shipments/${shipmentId}/assign-awb`, data);
-  return response.data;
+  return await apiRequest(`/api/shipping/shipments/${encodeURIComponent(shipmentId)}/assign-awb`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 /**
  * Schedule courier pickup for consignment
  */
 export async function schedulePickup(shipmentId, data = {}) {
-  const response = await api.post(`/shipping/shipments/${shipmentId}/schedule-pickup`, data);
-  return response.data;
+  return await apiRequest(`/api/shipping/shipments/${encodeURIComponent(shipmentId)}/schedule-pickup`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 /**
  * Generate official shipping label PDF
  */
 export async function generateLabel(shipmentId) {
-  const response = await api.post(`/shipping/shipments/${shipmentId}/label`);
-  return response.data;
+  return await apiRequest(`/api/shipping/shipments/${encodeURIComponent(shipmentId)}/label`, {
+    method: 'POST',
+  });
 }
 
 /**
  * Generate official shipping manifest PDF
  */
 export async function generateManifest(shipmentId) {
-  const response = await api.post(`/shipping/shipments/${shipmentId}/manifest`);
-  return response.data;
+  return await apiRequest(`/api/shipping/shipments/${encodeURIComponent(shipmentId)}/manifest`, {
+    method: 'POST',
+  });
 }
 
 /**
  * Refresh live tracking events from Shiprocket provider
  */
 export async function trackShipment(shipmentId, params = {}) {
-  const response = await api.get(`/shipping/shipments/${shipmentId}/track`, { params });
-  return response.data;
+  const qs = new URLSearchParams();
+  if (params.awb) qs.append('awb', String(params.awb));
+  const queryStr = qs.toString() ? `?${qs.toString()}` : '';
+  return await apiRequest(`/api/shipping/shipments/${encodeURIComponent(shipmentId)}/track${queryStr}`, {
+    method: 'GET',
+  });
 }
 
 /**
  * Cancel shipment with Shiprocket
  */
 export async function cancelShipment(shipmentId, data = {}) {
-  const response = await api.post(`/shipping/shipments/${shipmentId}/cancel`, data);
-  return response.data;
+  return await apiRequest(`/api/shipping/shipments/${encodeURIComponent(shipmentId)}/cancel`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 /**
  * Initiate reverse pickup return order
  */
 export async function createReturnOrder(orderId, returnData = {}) {
-  const response = await api.post(`/shipping/orders/${orderId}/return`, returnData);
-  return response.data;
+  return await apiRequest(`/api/shipping/orders/${encodeURIComponent(orderId)}/return`, {
+    method: 'POST',
+    body: JSON.stringify(returnData),
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -116,8 +139,9 @@ export async function createReturnOrder(orderId, returnData = {}) {
  * Customer: Retrieve verified tracking info for own order
  */
 export async function getCustomerOrderTracking(orderId) {
-  const response = await api.get(`/account/orders/${orderId}/tracking`);
-  return response.data;
+  return await apiRequest(`/api/account/orders/${encodeURIComponent(orderId)}/tracking`, {
+    method: 'GET',
+  });
 }
 
 export default {

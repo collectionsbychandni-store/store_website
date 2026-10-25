@@ -13,6 +13,7 @@ const router = Router();
 // Profile endpoints
 router.get('/profile', authenticateToken, authController.getMe);
 router.put('/profile', authenticateToken, authController.updateProfile);
+router.put('/change-password', authenticateToken, authController.changePassword);
 
 // Customer Address endpoints (Step 14)
 router.get('/addresses', authenticateToken, addressController.getAddresses);

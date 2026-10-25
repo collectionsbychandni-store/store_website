@@ -143,9 +143,23 @@ export default function Header() {
                       key={cat.id}
                       to={`/shop?category=${cat.id}`}
                       onClick={() => setCategoryDropdownOpen(false)}
-                      className="block px-4 py-2 text-xs text-stone-700 hover:bg-[#F3EFE6] hover:text-[#781D42] transition-colors"
+                      className="flex items-center space-x-2.5 px-3.5 py-2 text-xs text-stone-700 hover:bg-[#F3EFE6] hover:text-[#781D42] transition-colors"
                     >
-                      {cat.name}
+                      {cat.imageUrl ? (
+                        <img
+                          src={cat.imageUrl}
+                          alt=""
+                          className="h-6 w-6 rounded-md object-cover border border-stone-200/80 shrink-0"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <span className="h-6 w-6 rounded-md bg-stone-100 border border-stone-200/60 flex items-center justify-center text-[10px] text-stone-400 shrink-0">
+                          {cat.name.charAt(0)}
+                        </span>
+                      )}
+                      <span className="truncate font-medium">{cat.name}</span>
                     </Link>
                   ))}
                   <div className="border-t border-stone-200/60 mt-1 pt-1">
@@ -381,9 +395,23 @@ export default function Header() {
                     key={cat.id}
                     to={`/shop?category=${cat.id}`}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs text-stone-700 hover:text-[#781D42]"
+                    className="flex items-center space-x-2 py-1.5 px-2 rounded-md hover:bg-stone-100 text-xs text-stone-700 hover:text-[#781D42] transition-colors"
                   >
-                    {cat.name}
+                    {cat.imageUrl ? (
+                      <img
+                        src={cat.imageUrl}
+                        alt=""
+                        className="h-5 w-5 rounded object-cover border border-stone-200/80 shrink-0"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <span className="h-5 w-5 rounded bg-stone-100 border border-stone-200/60 flex items-center justify-center text-[9px] text-stone-400 shrink-0">
+                        {cat.name.charAt(0)}
+                      </span>
+                    )}
+                    <span className="truncate">{cat.name}</span>
                   </Link>
                 ))}
               </div>

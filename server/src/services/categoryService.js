@@ -1,4 +1,18 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import prisma from '../config/db.js';
+import { loadCollection, saveCollection } from '../utils/fileStore.js';
+import {
+  isCloudinaryConfigured,
+  uploadBufferToCloudinary,
+  deleteFromCloudinary,
+  validateImageFile,
+} from '../config/cloudinary.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const UPLOADS_DIR = path.resolve(__dirname, '../../../public/uploads/categories');
 
 /**
  * Utility: Generates a URL-friendly slug from category name
@@ -150,7 +164,7 @@ const DEMO_PRODUCTS_CATEGORY_MAP = {
   'cat-dresses': 1,
 };
 
-let inMemoryCategories = [...INITIAL_DEMO_CATEGORIES];
+let inMemoryCategories = loadCollection('categories', INITIAL_DEMO_CATEGORIES);
 
 /**
  * Checks whether PostgreSQL connection is alive with short timeout
@@ -475,6 +489,7 @@ export async function createCategory({ name, description, imageUrl, parentId, is
   };
 
   inMemoryCategories.push(newCategory);
+  saveCollection('categories', inMemoryCategories);
   return enrichCategoryInMemory(newCategory);
 }
 
@@ -621,6 +636,7 @@ export async function updateCategory(id, { name, description, imageUrl, parentId
     ...inMemoryCategories[idx],
     ...updateData,
   };
+  saveCollection('categories', inMemoryCategories);
 
   return enrichCategoryInMemory(inMemoryCategories[idx]);
 }
@@ -714,13 +730,90 @@ export async function deleteCategory(id) {
   }
 
   inMemoryCategories = inMemoryCategories.filter((c) => c.id !== id);
+  saveCollection('categories', inMemoryCategories);
   return true;
+}
+
+/**
+ * Uploads a category image (Cloudinary when configured, local static disk fallback when not)
+ * Validates format (JPEG, PNG, WebP) and size (<= 5MB)
+ * @param {Express.Multer.File} file
+ * @returns {Promise<{ imageUrl: string, publicId?: string, format?: string, width?: number, height?: number }>}
+ */
+export async function uploadCategoryImage(file) {
+  if (!file || !file.buffer) {
+    const err = new Error('No image file was uploaded');
+    err.status = 400;
+    throw err;
+  }
+
+  // Validate format and magic numbers
+  const validation = validateImageFile(file);
+  if (!validation.valid) {
+    const err = new Error(validation.error);
+    err.status = 400;
+    err.code = 'INVALID_FILE_TYPE';
+    throw err;
+  }
+
+  // 1. If Cloudinary is configured, upload to Cloudinary
+  if (isCloudinaryConfigured()) {
+    try {
+      const result = await uploadBufferToCloudinary(file.buffer, {
+        folder: 'collections_by_chandni/categories',
+        transformation: [
+          { quality: 'auto:good' },
+          { fetch_format: 'auto' },
+        ],
+      });
+
+      return {
+        imageUrl: result.secure_url || result.url,
+        publicId: result.public_id,
+        format: result.format,
+        width: result.width,
+        height: result.height,
+      };
+    } catch (cloudErr) {
+      console.warn('Cloudinary category upload failed, falling back to local storage:', cloudErr.message);
+    }
+  }
+
+  // 2. Local static disk storage fallback (persisted in public/uploads/categories)
+  try {
+    if (!fs.existsSync(UPLOADS_DIR)) {
+      fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+    }
+
+    const ext = validation.extension || 'jpg';
+    const filename = `cat_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+    const filePath = path.join(UPLOADS_DIR, filename);
+
+    fs.writeFileSync(filePath, file.buffer);
+
+    return {
+      imageUrl: `/uploads/categories/${filename}`,
+      publicId: null,
+      format: ext,
+    };
+  } catch (diskErr) {
+    console.warn('Local disk write failed, falling back to data URL:', diskErr.message);
+    // 3. Ultra-resilient fallback: Data URL
+    const mime = file.mimetype || 'image/jpeg';
+    const dataUrl = `data:${mime};base64,${file.buffer.toString('base64')}`;
+    return {
+      imageUrl: dataUrl,
+      publicId: null,
+      format: validation.format || 'jpeg',
+    };
+  }
 }
 
 export default {
   generateSlug,
   getCategories,
   getCategoryById,
+  uploadCategoryImage,
   createCategory,
   updateCategory,
   updateCategoryStatus,

@@ -27,6 +27,7 @@ import ReturnsManagement from '../pages/admin/ReturnsManagement';
 import BannerManagement from '../pages/admin/BannerManagement';
 import CustomerManagement from '../pages/admin/CustomerManagement';
 import SalesReport from '../pages/admin/SalesReport';
+import AdminSettings from '../pages/admin/AdminSettings';
 import AdminPlaceholder from '../pages/admin/AdminPlaceholder';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -116,7 +117,7 @@ export default function AppRoutes() {
         path="/admin/settings"
         element={
           <ProtectedRoute>
-            <AdminPlaceholder title="Settings" />
+            <AdminSettings />
           </ProtectedRoute>
         }
       />

@@ -15,6 +15,7 @@ router.post('/admin/login', authRateLimiter, authController.adminLogin);
 // Current User Profile & Updates
 router.get('/me', authenticateToken, authController.getMe);
 router.put('/profile', authenticateToken, authController.updateProfile);
+router.put('/change-password', authenticateToken, authController.changePassword);
 
 // Logout
 router.post('/logout', authController.logout);
