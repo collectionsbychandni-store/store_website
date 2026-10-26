@@ -15,6 +15,7 @@ import customerRoutes from './customerRoutes.js';
 import reportRoutes from './reportRoutes.js';
 import shippingRoutes from './shippingRoutes.js';
 import returnRoutes from './returnRoutes.js';
+import notificationRoutes from './notificationRoutes.js';
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.use('/', healthRoutes);
 router.use('/auth', authRoutes);
 router.use('/account', accountRoutes);
 router.use('/categories', categoryRoutes);
+router.use('/admin/categories', categoryRoutes);
 router.use('/products', productRoutes);
 router.use('/variants', variantRoutes);
 router.use('/inventory', inventoryRoutes);
@@ -40,6 +42,8 @@ router.use('/shipping', shippingRoutes);
 router.use('/admin/shipping', shippingRoutes);
 router.use('/admin/returns', returnRoutes);
 router.use('/returns', returnRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/admin/notifications', notificationRoutes);
 
 export default router;
 

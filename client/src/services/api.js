@@ -8,25 +8,36 @@ const TOKEN_KEY = 'cbc_admin_token';
 const GUEST_CART_KEY = 'cbc_cart_session_id';
 
 /**
- * Retrieves the stored authentication token
+ * Retrieves the stored authentication token across all supported keys
  */
 export function getStoredToken() {
   try {
-    return localStorage.getItem(TOKEN_KEY);
+    return (
+      localStorage.getItem(TOKEN_KEY) ||
+      localStorage.getItem('cbc_auth_token') ||
+      localStorage.getItem('token') ||
+      localStorage.getItem('auth_token') ||
+      null
+    );
   } catch (e) {
     return null;
   }
 }
 
 /**
- * Stores the authentication token
+ * Stores the authentication token synchronously across all supported keys
  */
 export function setStoredToken(token) {
   try {
     if (token) {
       localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem('cbc_auth_token', token);
+      localStorage.setItem('token', token);
     } else {
       localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem('cbc_auth_token');
+      localStorage.removeItem('token');
+      localStorage.removeItem('auth_token');
     }
   } catch (e) {
     console.error('Failed to update stored token:', e);
@@ -39,6 +50,9 @@ export function setStoredToken(token) {
 export function removeStoredToken() {
   try {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('cbc_auth_token');
+    localStorage.removeItem('token');
+    localStorage.removeItem('auth_token');
     localStorage.removeItem('cbc_admin_user');
   } catch (e) {
     console.error('Failed to remove stored token:', e);

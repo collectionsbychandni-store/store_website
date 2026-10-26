@@ -13,6 +13,8 @@ import payuConfig, {
 import * as orderService from './orderService.js';
 import * as inventoryService from './inventoryService.js';
 import * as variantService from './variantService.js';
+import * as authService from './authService.js';
+import notificationService from './notificationService.js';
 
 /**
  * Collections by Chandni - Payment Gateway & Fulfillment Service
@@ -277,6 +279,20 @@ export async function handlePayUCallback(postData = {}) {
         console.warn('DB update fallback for PayU success:', dbErr.message);
       }
     }
+
+    // 6. Trigger transactional payment confirmation notifications (non-blocking, fail-safe)
+    authService
+      .getUserById(order.userId)
+      .then((customer) => {
+        notificationService
+          .sendPaymentConfirmationNotifications({
+            order,
+            customer,
+            paymentDetails: order.paymentDetails,
+          })
+          .catch((err) => console.warn('Payment confirmation notification warning:', err.message));
+      })
+      .catch((err) => console.warn('Customer lookup for payment notification warning:', err.message));
 
     const redirectUrl = `${FRONTEND_URL}/checkout/payment-status?orderNumber=${order.orderNumber}&status=success&txnid=${txnid}&mode=${encodeURIComponent(
       mode || 'ONLINE'

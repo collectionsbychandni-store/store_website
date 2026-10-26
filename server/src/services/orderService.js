@@ -4,6 +4,7 @@ import * as authService from './authService.js';
 import * as inventoryService from './inventoryService.js';
 import * as variantService from './variantService.js';
 import { loadCollection, saveCollection } from '../utils/fileStore.js';
+import notificationService from './notificationService.js';
 
 /**
  * Collections by Chandni - Order Service
@@ -1072,6 +1073,27 @@ export async function updateOrderStatus({
         return o;
       });
 
+      // Non-blocking notification dispatch on terminal status transitions
+      if (targetStatus === 'SHIPPED') {
+        const patron = updated.customer || updated.user;
+        notificationService
+          .sendOrderDispatchedNotifications({
+            order: updated,
+            customer: patron,
+            shipment: updated.shipments?.[0] || {},
+          })
+          .catch((e) => console.warn('Order dispatched notification warning:', e.message));
+      } else if (targetStatus === 'CANCELLED') {
+        const patron = updated.customer || updated.user;
+        notificationService
+          .sendOrderCancelledNotifications({
+            order: updated,
+            customer: patron,
+            cancellationReason: note || 'Cancelled by Atelier administration',
+          })
+          .catch((e) => console.warn('Order cancelled notification warning:', e.message));
+      }
+
       return {
         success: true,
         message: `Order status updated to ${targetStatus}`,
@@ -1090,6 +1112,27 @@ export async function updateOrderStatus({
     order.statusHistory = [];
   }
   order.statusHistory.push(historyEntry);
+
+  // Non-blocking notification dispatch for in-memory status transitions
+  if (targetStatus === 'SHIPPED') {
+    const patron = order.customer || order.user;
+    notificationService
+      .sendOrderDispatchedNotifications({
+        order,
+        customer: patron,
+        shipment: order.shipments?.[0] || {},
+      })
+      .catch((e) => console.warn('Order dispatched notification warning:', e.message));
+  } else if (targetStatus === 'CANCELLED') {
+    const patron = order.customer || order.user;
+    notificationService
+      .sendOrderCancelledNotifications({
+        order,
+        customer: patron,
+        cancellationReason: note || 'Cancelled by Atelier administration',
+      })
+      .catch((e) => console.warn('Order cancelled notification warning:', e.message));
+  }
 
   return {
     success: true,

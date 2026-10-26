@@ -11,6 +11,7 @@ import payuConfig, {
   generateCheckActionStatusHash,
 } from '../config/payuConfig.js';
 import { loadCollection, saveCollection } from '../utils/fileStore.js';
+import notificationService from './notificationService.js';
 
 /**
  * Collections by Chandni - Returns, Refunds, Cancellations & RTO Management Service
@@ -261,6 +262,16 @@ export async function cancelOrderByCustomer({ orderId, userId, reason }) {
       console.warn('DB update fallback for customer cancellation:', dbErr.message);
     }
   }
+
+  // Non-blocking cancellation notification dispatch
+  notificationService
+    .sendOrderCancelledNotifications({
+      order,
+      customer: order.customer,
+      cancellationReason,
+      refundNote: refundResult ? 'Refund initiated via PayU' : '',
+    })
+    .catch((err) => console.warn('Customer cancellation notification warning:', err.message));
 
   return {
     success: true,
@@ -947,6 +958,17 @@ export async function processRefund({
       });
       inMemoryRefunds.unshift(created);
       persistReturnsAndRefunds();
+
+      if (created.status === 'SUCCESS') {
+        notificationService
+          .sendRefundProcessedNotifications({
+            order,
+            customer: order.customer,
+            refund: created,
+          })
+          .catch((err) => console.warn('Refund notification warning:', err.message));
+      }
+
       return created;
     } catch (dbErr) {
       console.warn('Prisma refund creation fallback:', dbErr.message);
@@ -955,6 +977,17 @@ export async function processRefund({
 
   inMemoryRefunds.unshift(refundRecord);
   persistReturnsAndRefunds();
+
+  if (refundRecord.status === 'SUCCESS') {
+    notificationService
+      .sendRefundProcessedNotifications({
+        order,
+        customer: order.customer,
+        refund: refundRecord,
+      })
+      .catch((err) => console.warn('Refund notification warning:', err.message));
+  }
+
   return refundRecord;
 }
 

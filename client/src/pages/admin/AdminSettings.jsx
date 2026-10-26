@@ -15,7 +15,9 @@ import {
   Check,
   Building,
   Sparkles,
+  Bell,
 } from 'lucide-react';
+import NotificationLogSection from '../../components/admin/NotificationLogSection';
 
 /**
  * Collections by Chandni - Admin Account & Security Settings
@@ -188,6 +190,18 @@ export default function AdminSettings() {
             >
               <User size={14} className={activeTab === 'profile' ? 'text-[#781D42]' : ''} />
               <span>Admin Profile</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('notifications')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xs font-medium transition-all ${
+                activeTab === 'notifications'
+                  ? 'bg-white text-stone-900 shadow-xs font-semibold'
+                  : 'text-stone-600 hover:text-stone-900'
+              }`}
+            >
+              <Bell size={14} className={activeTab === 'notifications' ? 'text-[#781D42]' : ''} />
+              <span>Email & WhatsApp</span>
             </button>
           </div>
         </div>
@@ -529,6 +543,9 @@ export default function AdminSettings() {
             </form>
           </div>
         )}
+
+        {/* Email & WhatsApp Notifications Tab */}
+        {activeTab === 'notifications' && <NotificationLogSection />}
       </div>
     </AdminLayout>
   );

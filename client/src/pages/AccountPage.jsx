@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Container from '../components/Container';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { getStoredToken } from '../services/api';
 import {
   User,
   Mail,
@@ -19,6 +20,8 @@ import {
   X,
   MapPin,
   Package,
+  Bell,
+  MessageSquare,
 } from 'lucide-react';
 
 /**
@@ -45,6 +48,47 @@ export default function AccountPage() {
 
   // Logout confirmation
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  // Notification Preferences State (Step 26)
+  const [emailNotifs, setEmailNotifs] = useState(user?.emailNotifications !== false);
+  const [whatsappNotifs, setWhatsappNotifs] = useState(user?.whatsappNotifications !== false);
+  const [savingPrefs, setSavingPrefs] = useState(false);
+  const [prefFeedback, setPrefFeedback] = useState(null);
+
+  const handleTogglePreference = async (field, currentValue) => {
+    const nextEmail = field === 'email' ? !currentValue : emailNotifs;
+    const nextWhatsapp = field === 'whatsapp' ? !currentValue : whatsappNotifs;
+
+    if (field === 'email') setEmailNotifs(nextEmail);
+    if (field === 'whatsapp') setWhatsappNotifs(nextWhatsapp);
+
+    setSavingPrefs(true);
+    setPrefFeedback(null);
+    try {
+      const token = getStoredToken();
+      const res = await fetch('/api/account/preferences/notifications', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          emailNotifications: nextEmail,
+          whatsappNotifications: nextWhatsapp,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPrefFeedback({ type: 'success', message: 'Notification preferences updated.' });
+      } else {
+        setPrefFeedback({ type: 'error', message: data.message || 'Could not update preferences.' });
+      }
+    } catch (e) {
+      setPrefFeedback({ type: 'error', message: 'Network error updating preferences.' });
+    } finally {
+      setSavingPrefs(false);
+    }
+  };
 
   const formattedJoinDate = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString('en-IN', {
@@ -330,6 +374,99 @@ export default function AccountPage() {
                     </div>
                   </form>
                 )}
+              </div>
+
+              {/* Notification Preferences Card (Step 26) */}
+              <div className="bg-white border border-stone-200/90 rounded-sm p-6 space-y-4 shadow-xs">
+                <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-[#FAF4EB] text-[#781D42] flex items-center justify-center">
+                      <Bell size={16} />
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-base font-semibold text-stone-900">
+                        Order Notifications & Alerts
+                      </h3>
+                      <p className="text-xs text-stone-500 font-light">
+                        Manage transactional updates for orders, shipments, and refunds
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {prefFeedback && (
+                  <div
+                    className={`p-2.5 rounded-xs text-xs flex items-center gap-2 ${
+                      prefFeedback.type === 'success'
+                        ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
+                        : 'bg-rose-50 text-rose-900 border border-rose-200'
+                    }`}
+                  >
+                    {prefFeedback.type === 'success' ? (
+                      <Check size={14} className="text-emerald-700" />
+                    ) : (
+                      <AlertCircle size={14} className="text-rose-700" />
+                    )}
+                    <span>{prefFeedback.message}</span>
+                  </div>
+                )}
+
+                <div className="space-y-3 pt-1">
+                  {/* Email Toggle */}
+                  <div className="flex items-start justify-between p-3 rounded-xs bg-stone-50/70 border border-stone-200/80">
+                    <div className="flex items-start gap-3">
+                      <Mail size={16} className="text-[#781D42] mt-0.5" />
+                      <div>
+                        <div className="text-xs font-semibold text-stone-900">Email Notifications</div>
+                        <div className="text-[11px] text-stone-500 font-light leading-relaxed">
+                          Receive order confirmation, payment receipts, shipment tracking, and refund slips at{' '}
+                          <span className="font-mono text-stone-700">{user?.email}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={savingPrefs}
+                      onClick={() => handleTogglePreference('email', emailNotifs)}
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        emailNotifs ? 'bg-[#781D42]' : 'bg-stone-300'
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
+                          emailNotifs ? 'translate-x-4' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {/* WhatsApp Toggle */}
+                  <div className="flex items-start justify-between p-3 rounded-xs bg-stone-50/70 border border-stone-200/80">
+                    <div className="flex items-start gap-3">
+                      <MessageSquare size={16} className="text-emerald-700 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-semibold text-stone-900">WhatsApp Instant Updates</div>
+                        <div className="text-[11px] text-stone-500 font-light leading-relaxed">
+                          Receive real-time courier dispatch alerts, delivery estimates, and atelier receipts via official WhatsApp
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={savingPrefs}
+                      onClick={() => handleTogglePreference('whatsapp', whatsappNotifs)}
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        whatsappNotifs ? 'bg-emerald-700' : 'bg-stone-300'
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
+                          whatsappNotifs ? 'translate-x-4' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {/* Quick Actions & Atelier Highlights (4 cols) */}

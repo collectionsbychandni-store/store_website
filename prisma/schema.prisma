@@ -41,13 +41,16 @@ model User {
   passwordHash String
   role         Role      @default(CUSTOMER)
   isActive     Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  emailNotifications    Boolean   @default(true)
+  whatsappNotifications Boolean   @default(true)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   addresses      Address[]
   cart           Cart?
   orders         Order[]
   returnRequests ReturnRequest[]
+  notifications  Notification[]
 
   @@index([email])
   @@index([phone])
@@ -242,6 +245,7 @@ model Order {
   shipments       Shipment[]
   returnRequests  ReturnRequest[]
   refunds         Refund[]
+  notifications   Notification[]
 
   @@index([orderNumber])
   @@index([userId])
@@ -422,5 +426,40 @@ model Banner {
   updatedAt       DateTime  @updatedAt
 
   @@map("banners")
+}
+
+// -------------------------------------------------------------
+// 8. Notifications & Outbox Log (Step 26)
+// -------------------------------------------------------------
+model Notification {
+  id             String    @id @default(uuid())
+  orderId        String?
+  userId         String?
+  event          String    // ORDER_CONFIRMED, PAYMENT_CONFIRMED, ORDER_DISPATCHED, ORDER_CANCELLED, REFUND_PROCESSED
+  channel        String    // EMAIL, WHATSAPP
+  recipient      String
+  status         String    @default("PENDING") // PENDING, SENT, DELIVERED, FAILED, SKIPPED
+  provider       String    // RESEND, SMTP, MSG91, DRY_RUN
+  providerRef    String?
+  idempotencyKey String?   @unique
+  subject        String?
+  templateName   String?
+  metadata       Json?
+  errorMessage   String?
+  attempts       Int       @default(1)
+  lastAttemptAt  DateTime  @default(now())
+  deliveredAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  order          Order?    @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([userId])
+  @@index([channel])
+  @@index([status])
+  @@index([createdAt])
+  @@map("notifications")
 }
 

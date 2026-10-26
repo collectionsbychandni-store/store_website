@@ -95,28 +95,10 @@ export async function uploadCategoryImage(file) {
   const formData = new FormData();
   formData.append('image', file);
 
-  const token = localStorage.getItem('cbc_auth_token');
-  const headers = {};
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const res = await fetch('/api/categories/upload', {
+  return await apiRequest('/api/categories/upload', {
     method: 'POST',
-    headers,
     body: formData,
-    credentials: 'same-origin',
   });
-
-  const data = await res.json();
-  if (!res.ok) {
-    const err = new Error(data.message || 'Image upload failed');
-    err.status = res.status;
-    err.code = data.code;
-    throw err;
-  }
-
-  return data;
 }
 
 export default {

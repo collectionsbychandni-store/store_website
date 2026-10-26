@@ -1,4 +1,4 @@
-import { apiRequest } from './api';
+import { apiRequest, getStoredToken } from './api';
 
 /**
  * Report Service for Collections by Chandni
@@ -105,7 +105,7 @@ export async function downloadReportCsv(reportType = 'sales-summary', params = {
   if (params.startDate) query.append('startDate', params.startDate);
   if (params.endDate) query.append('endDate', params.endDate);
 
-  const token = localStorage.getItem('cbc_auth_token');
+  const token = getStoredToken();
   const headers = {};
   if (token) headers['Authorization'] = `Bearer ${token}`;
 

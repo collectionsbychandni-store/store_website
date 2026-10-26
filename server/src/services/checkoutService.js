@@ -8,6 +8,7 @@ import * as orderService from './orderService.js';
 import * as authService from './authService.js';
 import * as inventoryService from './inventoryService.js';
 import * as paymentService from './paymentService.js';
+import notificationService from './notificationService.js';
 
 /**
  * Collections by Chandni - Checkout & Order Preparation Service
@@ -456,10 +457,15 @@ export async function prepareOrder({
   // 7. Clear cart only after successful order creation
   await cartService.clearCart({ userId });
 
-  // 8. Generate PayU Hosted Checkout parameters if online payment
+  // 8. Trigger transactional order confirmation notifications (non-blocking, fail-safe)
+  const patron = await authService.getUserById(userId);
+  notificationService
+    .sendOrderConfirmationNotifications({ order: newOrder, customer: patron })
+    .catch((err) => console.warn('Non-blocking order confirmation notification warning:', err.message));
+
+  // 9. Generate PayU Hosted Checkout parameters if online payment
   let payuParams = null;
   if (normalizedPaymentMethod === 'PAYU') {
-    const patron = await authService.getUserById(userId);
     payuParams = await paymentService.generatePayUPaymentData({
       order: newOrder,
       customer: patron,

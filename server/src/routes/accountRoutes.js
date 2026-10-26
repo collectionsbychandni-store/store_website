@@ -4,6 +4,7 @@ import * as addressController from '../controllers/addressController.js';
 import * as orderController from '../controllers/orderController.js';
 import * as shippingController from '../controllers/shippingController.js';
 import * as returnRefundController from '../controllers/returnRefundController.js';
+import * as notificationController from '../controllers/notificationController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 import { handleImageUpload } from '../middleware/uploadMiddleware.js';
 import { actionRateLimiter } from '../middleware/securityMiddleware.js';
@@ -14,6 +15,10 @@ const router = Router();
 router.get('/profile', authenticateToken, authController.getMe);
 router.put('/profile', authenticateToken, authController.updateProfile);
 router.put('/change-password', authenticateToken, authController.changePassword);
+
+// Customer Notification Preferences (Step 26)
+router.get('/preferences/notifications', authenticateToken, notificationController.getPreferences);
+router.put('/preferences/notifications', authenticateToken, notificationController.updatePreferences);
 
 // Customer Address endpoints (Step 14)
 router.get('/addresses', authenticateToken, addressController.getAddresses);

@@ -1,4 +1,4 @@
-import { apiRequest } from './api';
+import { apiRequest, getStoredToken } from './api';
 
 /**
  * Inventory Service for Collections by Chandni
@@ -184,7 +184,7 @@ export async function downloadInventoryCsvFromServer(params = {}) {
   if (params.sortBy) query.append('sortBy', params.sortBy);
   if (params.sortOrder) query.append('sortOrder', params.sortOrder);
 
-  const token = localStorage.getItem('cbc_auth_token');
+  const token = getStoredToken();
   const headers = {};
   if (token) headers['Authorization'] = `Bearer ${token}`;
 

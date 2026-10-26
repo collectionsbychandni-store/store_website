@@ -50,6 +50,33 @@ export async function syncDatabaseSchema() {
           ALTER TABLE "banners" ADD COLUMN IF NOT EXISTS "imagePublicId" TEXT;
           ALTER TABLE "banners" ADD COLUMN IF NOT EXISTS "destinationUrl" TEXT;
         END IF;
+
+        IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'users') THEN
+          ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "emailNotifications" BOOLEAN NOT NULL DEFAULT true;
+          ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "whatsappNotifications" BOOLEAN NOT NULL DEFAULT true;
+        END IF;
+
+        CREATE TABLE IF NOT EXISTS "notifications" (
+          "id" TEXT PRIMARY KEY,
+          "orderId" TEXT REFERENCES "orders"("id") ON DELETE SET NULL,
+          "userId" TEXT REFERENCES "users"("id") ON DELETE SET NULL,
+          "event" TEXT NOT NULL,
+          "channel" TEXT NOT NULL,
+          "recipient" TEXT NOT NULL,
+          "status" TEXT NOT NULL DEFAULT 'PENDING',
+          "provider" TEXT NOT NULL,
+          "providerRef" TEXT,
+          "idempotencyKey" TEXT UNIQUE,
+          "subject" TEXT,
+          "templateName" TEXT,
+          "metadata" JSONB,
+          "errorMessage" TEXT,
+          "attempts" INTEGER NOT NULL DEFAULT 1,
+          "lastAttemptAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "deliveredAt" TIMESTAMP(3),
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
       END $$;
     `);
 
