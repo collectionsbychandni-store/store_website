@@ -161,34 +161,43 @@ export async function searchPosProducts({ search = '', categoryId = '', inStockO
   // Flatten and format for POS cashier grid
   const formattedProducts = products.map((p) => {
     const rawVariants = p.variants || [];
-    const variants = rawVariants.map((v) => ({
-      id: v.id,
-      productId: p.id,
-      sku: v.sku,
-      barcode: v.barcode || null,
-      size: v.size,
-      color: v.color,
-      sellingPrice: Number(v.sellingPrice || p.sellingPrice || 0),
-      mrp: Number(v.mrp || p.mrp || v.sellingPrice || 0),
-      stock: Number(v.stock ?? 0),
-      lowStockThreshold: Number(v.lowStockThreshold ?? 5),
-      isAvailable: Number(v.stock ?? 0) > 0,
-    }));
+    const variants = rawVariants.map((v) => {
+      const variantStock = Number(v.stockQuantity !== undefined ? v.stockQuantity : (v.stock ?? 0));
+      return {
+        id: v.id,
+        productId: p.id,
+        sku: v.sku,
+        barcode: v.barcode || null,
+        size: v.size,
+        color: v.color,
+        sellingPrice: Number(v.sellingPrice || p.sellingPrice || 0),
+        mrp: Number(v.mrp || p.mrp || v.sellingPrice || 0),
+        stock: variantStock,
+        stockQuantity: variantStock,
+        lowStockThreshold: Number(v.lowStockThreshold ?? 5),
+        isAvailable: variantStock > 0,
+      };
+    });
 
-    const totalStock = variants.reduce((sum, v) => sum + Math.max(0, v.stock), 0);
+    const totalStock = variants.reduce((sum, v) => sum + Math.max(0, v.stockQuantity), 0);
     const minPrice = variants.length > 0 ? Math.min(...variants.map((v) => v.sellingPrice)) : Number(p.sellingPrice || 0);
     const maxPrice = variants.length > 0 ? Math.max(...variants.map((v) => v.sellingPrice)) : Number(p.sellingPrice || 0);
 
+    const primaryImg = p.images?.[0]?.imageUrl || p.imageUrl || p.primaryImage || null;
     return {
       id: p.id,
       title: p.title,
       slug: p.slug,
-      categoryName: p.category?.name || 'Artisan Couture',
+      categoryName: p.category?.name || p.categoryName || 'Artisan Couture',
+      category: p.category || { name: p.categoryName || 'Artisan Couture' },
       categoryId: p.categoryId,
-      imageUrl: p.images?.[0]?.imageUrl || p.imageUrl || null,
+      imageUrl: primaryImg,
+      primaryImage: primaryImg,
       variants,
       totalStock,
       isAvailable: totalStock > 0,
+      price: minPrice,
+      sellingPrice: minPrice,
       priceDisplay: minPrice === maxPrice ? `₹${minPrice.toLocaleString('en-IN')}` : `₹${minPrice.toLocaleString('en-IN')} - ₹${maxPrice.toLocaleString('en-IN')}`,
       minPrice,
     };

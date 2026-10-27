@@ -192,7 +192,9 @@ export default function PosBilling() {
   // Add Item to Cart
   const addItemToCart = (product, variant) => {
     setCheckoutError('');
-    const availableStock = variant.stockQuantity ?? 0;
+    const availableStock = Number(
+      variant.stockQuantity !== undefined ? variant.stockQuantity : (variant.stock ?? 0)
+    );
 
     if (availableStock <= 0) {
       setCheckoutError(`"${product.title} (${variant.size || variant.color || 'Standard'})" is out of stock.`);
@@ -224,7 +226,7 @@ export default function PosBilling() {
         color: variant.color || '',
         price: Number(variant.sellingPrice || variant.price || product.price || 0),
         mrp: Number(variant.mrp || product.mrp || 0),
-        image: variant.image || product.primaryImage || '/placeholder-product.png',
+        image: variant.image || product.primaryImage || product.imageUrl || '/placeholder-product.png',
         availableStock,
         quantity: 1,
       };
@@ -568,7 +570,7 @@ export default function PosBilling() {
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
                   {products.map((product) => {
-                    const totalStock = product.totalStock ?? 0;
+                    const totalStock = Number(product.totalStock !== undefined ? product.totalStock : product.variants?.reduce((sum, v) => sum + Number(v.stockQuantity !== undefined ? v.stockQuantity : (v.stock ?? 0)), 0) ?? 0);
                     const isOutOfStock = totalStock <= 0;
                     const variantCount = product.variants?.length || 0;
                     const minPrice = product.variants?.reduce(
@@ -590,7 +592,7 @@ export default function PosBilling() {
                         {/* Image Thumbnail */}
                         <div className="relative aspect-square w-full bg-stone-100 overflow-hidden">
                           <img
-                            src={product.primaryImage || '/placeholder-product.png'}
+                            src={product.primaryImage || product.imageUrl || '/placeholder-product.png'}
                             alt={product.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             loading="lazy"
@@ -629,7 +631,7 @@ export default function PosBilling() {
                         <div className="p-2.5 flex-1 flex flex-col justify-between">
                           <div>
                             <p className="text-[11px] font-medium text-amber-900 line-clamp-1">
-                              {product.category?.name || 'Couture'}
+                              {product.category?.name || product.categoryName || 'Couture'}
                             </p>
                             <h3 className="text-xs font-semibold text-stone-900 line-clamp-2 mt-0.5">
                               {product.title}
@@ -1136,7 +1138,7 @@ export default function PosBilling() {
 
             <div className="p-5 max-h-96 overflow-y-auto space-y-2">
               {activeVariantProduct.variants?.map((v) => {
-                const stock = v.stockQuantity ?? 0;
+                const stock = Number(v.stockQuantity !== undefined ? v.stockQuantity : (v.stock ?? 0));
                 const isOut = stock <= 0;
                 const price = Number(v.sellingPrice || v.price || activeVariantProduct.price || 0);
 
