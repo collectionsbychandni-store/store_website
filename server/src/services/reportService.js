@@ -274,11 +274,46 @@ export async function getSalesSummary(params = {}) {
   let grossSales = 0;
   let totalRefundAmount = 0;
 
+  let onlinePaidCount = 0;
+  let onlineGrossSales = 0;
+  let posPaidCount = 0;
+  let posGrossSales = 0;
+
+  const byPaymentMethod = {
+    CASH: { count: 0, revenue: 0 },
+    UPI: { count: 0, revenue: 0 },
+    CARD: { count: 0, revenue: 0 },
+    PAYU: { count: 0, revenue: 0 },
+    COD: { count: 0, revenue: 0 },
+    OTHER: { count: 0, revenue: 0 },
+  };
+
   for (const o of orders) {
+    const isPos = o.source === 'POS' || (o.orderNumber && o.orderNumber.startsWith('POS-'));
+
     if (isEligiblePaidOrder(o)) {
       paidOrdersCount += 1;
       const orderSubtotal = Number(o.subtotal !== undefined ? o.subtotal : o.totalAmount);
       grossSales += orderSubtotal;
+
+      if (isPos) {
+        posPaidCount += 1;
+        posGrossSales += orderSubtotal;
+      } else {
+        onlinePaidCount += 1;
+        onlineGrossSales += orderSubtotal;
+      }
+
+      const method = (o.paymentMethod || (isPos ? 'CASH' : 'ONLINE_PREPAID')).toUpperCase();
+      let key = 'OTHER';
+      if (method.includes('CASH')) key = 'CASH';
+      else if (method.includes('UPI')) key = 'UPI';
+      else if (method.includes('CARD')) key = 'CARD';
+      else if (method.includes('PAYU') || method.includes('ONLINE_PREPAID')) key = 'PAYU';
+      else if (method.includes('COD')) key = 'COD';
+
+      byPaymentMethod[key].count += 1;
+      byPaymentMethod[key].revenue += Math.round(orderSubtotal);
 
       const items = o.items || [];
       for (const item of items) {
@@ -305,6 +340,17 @@ export async function getSalesSummary(params = {}) {
       timezone: range.timezone,
       daysCount: range.daysCount,
     },
+    onlineSales: {
+      count: onlinePaidCount,
+      revenue: Math.round(onlineGrossSales),
+      grossSales: Math.round(onlineGrossSales),
+    },
+    posSales: {
+      count: posPaidCount,
+      revenue: Math.round(posGrossSales),
+      grossSales: Math.round(posGrossSales),
+    },
+    byPaymentMethod,
     metrics: {
       totalOrders: totalOrdersCount,
       paidOrders: paidOrdersCount,
@@ -316,6 +362,17 @@ export async function getSalesSummary(params = {}) {
       refundAmount: Math.round(totalRefundAmount),
       netSales: Math.round(netSales),
       averageOrderValue,
+      onlineSales: {
+        count: onlinePaidCount,
+        revenue: Math.round(onlineGrossSales),
+        grossSales: Math.round(onlineGrossSales),
+      },
+      posSales: {
+        count: posPaidCount,
+        revenue: Math.round(posGrossSales),
+        grossSales: Math.round(posGrossSales),
+      },
+      byPaymentMethod,
       grossSalesFormatted: `₹${Math.round(grossSales).toLocaleString('en-IN')}`,
       refundAmountFormatted: `₹${Math.round(totalRefundAmount).toLocaleString('en-IN')}`,
       netSalesFormatted: `₹${Math.round(netSales).toLocaleString('en-IN')}`,
@@ -579,6 +636,7 @@ export async function getOrderBreakdown(params = {}) {
   const statusMap = {};
   const paymentStatusMap = {};
   const paymentMethodMap = {};
+  const channelMap = {};
   const totalOrders = orders.length;
 
   for (const o of orders) {
@@ -601,6 +659,12 @@ export async function getOrderBreakdown(params = {}) {
     if (!paymentMethodMap[pm]) paymentMethodMap[pm] = { paymentMethod: pm, count: 0, amount: 0 };
     paymentMethodMap[pm].count += 1;
     paymentMethodMap[pm].amount += amount;
+
+    // Sales Channel (Online vs POS In-Store)
+    const ch = o.source === 'POS' ? 'POS In-Store' : 'Online Store';
+    if (!channelMap[ch]) channelMap[ch] = { channel: ch, count: 0, amount: 0 };
+    channelMap[ch].count += 1;
+    channelMap[ch].amount += amount;
   }
 
   const formatBreakdownList = (map) => {
@@ -625,6 +689,7 @@ export async function getOrderBreakdown(params = {}) {
     byOrderStatus: formatBreakdownList(statusMap),
     byPaymentStatus: formatBreakdownList(paymentStatusMap),
     byPaymentMethod: formatBreakdownList(paymentMethodMap),
+    bySalesChannel: formatBreakdownList(channelMap),
   };
 }
 

@@ -16,6 +16,7 @@ import reportRoutes from './reportRoutes.js';
 import shippingRoutes from './shippingRoutes.js';
 import returnRoutes from './returnRoutes.js';
 import notificationRoutes from './notificationRoutes.js';
+import posRoutes from './posRoutes.js';
 
 const router = Router();
 
@@ -44,6 +45,8 @@ router.use('/admin/returns', returnRoutes);
 router.use('/returns', returnRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/admin/notifications', notificationRoutes);
+router.use('/admin/pos', posRoutes);
+router.use('/pos', posRoutes);
 
 export default router;
 

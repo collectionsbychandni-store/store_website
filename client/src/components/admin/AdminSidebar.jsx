@@ -16,10 +16,12 @@ import {
   X,
   Sparkles,
   RotateCcw,
+  Receipt,
 } from 'lucide-react';
 
 const navItems = [
   { name: 'Dashboard', path: '/admin', icon: LayoutDashboard, exact: true },
+  { name: 'POS Billing', path: '/admin/pos', icon: Receipt },
   { name: 'Products', path: '/admin/products', icon: Shirt },
   { name: 'Categories', path: '/admin/categories', icon: FolderTree },
   { name: 'Inventory', path: '/admin/inventory', icon: Boxes },

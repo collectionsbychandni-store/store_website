@@ -490,5 +490,1347 @@
       "createdAt": "2026-10-26T07:25:18.541Z",
       "updatedAt": "2026-10-26T07:25:18.541Z"
     }
+  ],
+  "orders": [
+    {
+      "id": "pos-order-c2196e1b-a449-4a39-b24b-8d3d3874c038",
+      "orderNumber": "POS-20261027-3308",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "CARD",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 3299,
+      "cashTendered": 3299,
+      "changeDue": 0,
+      "posCashierId": "admin-test",
+      "posCashierName": "Cashier Card",
+      "posNotes": "[Offline Ref: VISA 4920 / Auth 123456]",
+      "customerDetails": {
+        "id": null,
+        "name": "Card Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "Card Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "Card Patron",
+        "phone": "+91 98765 43210",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-2056b783-9ece-4376-b655-39803841c33b",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-card-1793089802242",
+      "statusHistory": [
+        {
+          "id": "shist-3e83fa74-cd8d-417e-8006-2ffc34e7e14f",
+          "orderId": "pos-order-c2196e1b-a449-4a39-b24b-8d3d3874c038",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Cashier Card",
+          "note": "In-store counter checkout completed via CARD by Cashier Card. Receipt: POS-20261027-3308",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:30:02.280Z",
+          "timestamp": "2026-10-27T08:30:02.280Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:30:02.280Z",
+      "updatedAt": "2026-10-27T08:30:02.280Z"
+    },
+    {
+      "id": "pos-order-3f42116d-87f2-48f9-afd7-505f19862e69",
+      "orderNumber": "POS-20261027-1001",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "UPI",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 3299,
+      "cashTendered": 3299,
+      "changeDue": 0,
+      "posCashierId": "admin-test",
+      "posCashierName": "Cashier UPI",
+      "posNotes": "[Offline Ref: UPI-9988776655]",
+      "customerDetails": {
+        "id": null,
+        "name": "UPI Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "UPI Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "UPI Patron",
+        "phone": "+91 98765 43210",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-3451ece8-9c1f-4e7e-9d7f-d761c7722522",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-upi-1793089802204",
+      "statusHistory": [
+        {
+          "id": "shist-af2607fd-f5bf-4aa2-805a-fca78338409b",
+          "orderId": "pos-order-3f42116d-87f2-48f9-afd7-505f19862e69",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Cashier UPI",
+          "note": "In-store counter checkout completed via UPI by Cashier UPI. Receipt: POS-20261027-1001",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:30:02.241Z",
+          "timestamp": "2026-10-27T08:30:02.241Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:30:02.241Z",
+      "updatedAt": "2026-10-27T08:30:02.241Z"
+    },
+    {
+      "id": "pos-order-32501a4d-7e8c-4e9a-8e3a-363a1a3ddb4a",
+      "orderNumber": "POS-20261027-9024",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "CASH",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 165,
+      "totalAmount": 3464,
+      "cashTendered": 3799,
+      "changeDue": 335,
+      "posCashierId": "admin-test",
+      "posCashierName": "Lead Cashier Chandni",
+      "posNotes": "Counter Test Cash Sale",
+      "customerDetails": {
+        "id": null,
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "email": "patron@example.com",
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "email": "patron@example.com",
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-3e7a2df7-a9f3-4c4e-affd-861b27b3f8c5",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-idemp-1793089802047",
+      "statusHistory": [
+        {
+          "id": "shist-ff566b6b-c8ed-4c3e-af23-22738d2b2a9b",
+          "orderId": "pos-order-32501a4d-7e8c-4e9a-8e3a-363a1a3ddb4a",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Lead Cashier Chandni",
+          "note": "In-store counter checkout completed via CASH by Lead Cashier Chandni. Receipt: POS-20261027-9024",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:30:02.121Z",
+          "timestamp": "2026-10-27T08:30:02.121Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:30:02.121Z",
+      "updatedAt": "2026-10-27T08:30:02.121Z"
+    },
+    {
+      "id": "pos-order-f8466f1b-91d2-4bab-84b5-9d76859c4a0a",
+      "orderNumber": "POS-20261027-9800",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "CARD",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 3299,
+      "cashTendered": 3299,
+      "changeDue": 0,
+      "posCashierId": "admin-test",
+      "posCashierName": "Cashier Card",
+      "posNotes": "[Offline Ref: VISA 4920 / Auth 123456]",
+      "customerDetails": {
+        "id": null,
+        "name": "Card Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "Card Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "Card Patron",
+        "phone": "+91 98765 43210",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-63a25183-4bf2-4a4f-812b-0ce4959eb18d",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-card-1793089786444",
+      "statusHistory": [
+        {
+          "id": "shist-957ac7a2-305e-4a8f-90a1-35241c01d5d0",
+          "orderId": "pos-order-f8466f1b-91d2-4bab-84b5-9d76859c4a0a",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Cashier Card",
+          "note": "In-store counter checkout completed via CARD by Cashier Card. Receipt: POS-20261027-9800",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:29:46.490Z",
+          "timestamp": "2026-10-27T08:29:46.490Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:29:46.490Z",
+      "updatedAt": "2026-10-27T08:29:46.490Z"
+    },
+    {
+      "id": "pos-order-a1bbd161-7a85-40c5-af33-883bad599b17",
+      "orderNumber": "POS-20261027-1509",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "UPI",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 3299,
+      "cashTendered": 3299,
+      "changeDue": 0,
+      "posCashierId": "admin-test",
+      "posCashierName": "Cashier UPI",
+      "posNotes": "[Offline Ref: UPI-9988776655]",
+      "customerDetails": {
+        "id": null,
+        "name": "UPI Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "UPI Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "UPI Patron",
+        "phone": "+91 98765 43210",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-9cfd3755-dc56-49a3-9023-da5ac82df8c7",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-upi-1793089786391",
+      "statusHistory": [
+        {
+          "id": "shist-66683f2d-110c-45dd-8335-863e7f7eadf1",
+          "orderId": "pos-order-a1bbd161-7a85-40c5-af33-883bad599b17",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Cashier UPI",
+          "note": "In-store counter checkout completed via UPI by Cashier UPI. Receipt: POS-20261027-1509",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:29:46.443Z",
+          "timestamp": "2026-10-27T08:29:46.443Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:29:46.443Z",
+      "updatedAt": "2026-10-27T08:29:46.443Z"
+    },
+    {
+      "id": "pos-order-693267f2-f37e-452f-8bf9-d48b3c20393d",
+      "orderNumber": "POS-20261027-8257",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "CASH",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 165,
+      "totalAmount": 3464,
+      "cashTendered": 3799,
+      "changeDue": 335,
+      "posCashierId": "admin-test",
+      "posCashierName": "Lead Cashier Chandni",
+      "posNotes": "Counter Test Cash Sale",
+      "customerDetails": {
+        "id": null,
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "email": "patron@example.com",
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "email": "patron@example.com",
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-3a5b67b5-311f-4ecc-91c8-38d5ce741f3a",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-idemp-1793089786216",
+      "statusHistory": [
+        {
+          "id": "shist-10e6588b-10d4-4152-8ace-c47203450a9c",
+          "orderId": "pos-order-693267f2-f37e-452f-8bf9-d48b3c20393d",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Lead Cashier Chandni",
+          "note": "In-store counter checkout completed via CASH by Lead Cashier Chandni. Receipt: POS-20261027-8257",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:29:46.304Z",
+          "timestamp": "2026-10-27T08:29:46.304Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:29:46.304Z",
+      "updatedAt": "2026-10-27T08:29:46.304Z"
+    },
+    {
+      "id": "pos-order-0d99cba9-c62d-41e4-a2a0-1ac95b695231",
+      "orderNumber": "POS-20261027-2839",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "CARD",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 3299,
+      "cashTendered": 3299,
+      "changeDue": 0,
+      "posCashierId": "admin-test",
+      "posCashierName": "Cashier Card",
+      "posNotes": "[Offline Ref: VISA 4920 / Auth 123456]",
+      "customerDetails": {
+        "id": null,
+        "name": "Card Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "Card Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "Card Patron",
+        "phone": "+91 98765 43210",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-a3c0f505-3ddd-4cdb-90f3-4abef7784300",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-card-1793089679625",
+      "statusHistory": [
+        {
+          "id": "shist-4663f81f-9f76-4723-bc56-932f2631a99c",
+          "orderId": "pos-order-0d99cba9-c62d-41e4-a2a0-1ac95b695231",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Cashier Card",
+          "note": "In-store counter checkout completed via CARD by Cashier Card. Receipt: POS-20261027-2839",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:27:59.662Z",
+          "timestamp": "2026-10-27T08:27:59.662Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:27:59.662Z",
+      "updatedAt": "2026-10-27T08:27:59.662Z"
+    },
+    {
+      "id": "pos-order-d0d0e474-a09a-45c7-8fc9-f16d39b0ef2f",
+      "orderNumber": "POS-20261027-1731",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "UPI",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 3299,
+      "cashTendered": 3299,
+      "changeDue": 0,
+      "posCashierId": "admin-test",
+      "posCashierName": "Cashier UPI",
+      "posNotes": "[Offline Ref: UPI-9988776655]",
+      "customerDetails": {
+        "id": null,
+        "name": "UPI Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "UPI Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "UPI Patron",
+        "phone": "+91 98765 43210",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-2f9537b0-7426-4b0a-9e75-5f20c25bd587",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-upi-1793089679589",
+      "statusHistory": [
+        {
+          "id": "shist-79f2c07d-ae67-49a7-a650-224243436954",
+          "orderId": "pos-order-d0d0e474-a09a-45c7-8fc9-f16d39b0ef2f",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Cashier UPI",
+          "note": "In-store counter checkout completed via UPI by Cashier UPI. Receipt: POS-20261027-1731",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:27:59.624Z",
+          "timestamp": "2026-10-27T08:27:59.624Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:27:59.624Z",
+      "updatedAt": "2026-10-27T08:27:59.624Z"
+    },
+    {
+      "id": "pos-order-5c7ea7fd-986e-4f08-8743-ddea000d5e94",
+      "orderNumber": "POS-20261027-1763",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "CASH",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 3299,
+      "cashTendered": 3299,
+      "changeDue": 0,
+      "posCashierId": "admin-test",
+      "posCashierName": "Lead Cashier Chandni",
+      "posNotes": null,
+      "customerDetails": {
+        "id": null,
+        "name": "Walk-in Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "Walk-in Patron",
+        "phone": null,
+        "email": null,
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "Walk-in Patron",
+        "phone": "+91 98765 43210",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-e150017c-33df-405e-bf50-8c6c59e109bd",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-idemp-1793089679346",
+      "statusHistory": [
+        {
+          "id": "shist-a548303c-6c9d-4187-9a6e-3112f778674a",
+          "orderId": "pos-order-5c7ea7fd-986e-4f08-8743-ddea000d5e94",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Lead Cashier Chandni",
+          "note": "In-store counter checkout completed via CASH by Lead Cashier Chandni. Receipt: POS-20261027-1763",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:27:59.552Z",
+          "timestamp": "2026-10-27T08:27:59.552Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:27:59.552Z",
+      "updatedAt": "2026-10-27T08:27:59.552Z"
+    },
+    {
+      "id": "pos-order-768764b3-f77b-4ddd-ba89-b0233aca3409",
+      "orderNumber": "POS-20261027-2542",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "CASH",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 165,
+      "totalAmount": 3464,
+      "cashTendered": 3799,
+      "changeDue": 335,
+      "posCashierId": "admin-test",
+      "posCashierName": "Lead Cashier Chandni",
+      "posNotes": "Counter Test Cash Sale",
+      "customerDetails": {
+        "id": null,
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "email": "patron@example.com",
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "email": "patron@example.com",
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-2c094fa0-16ee-4549-ad27-e33ba69d74fb",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-idemp-1793089679346",
+      "statusHistory": [
+        {
+          "id": "shist-ae6c68e4-f077-4dcf-93af-c147b0791ee0",
+          "orderId": "pos-order-768764b3-f77b-4ddd-ba89-b0233aca3409",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Lead Cashier Chandni",
+          "note": "In-store counter checkout completed via CASH by Lead Cashier Chandni. Receipt: POS-20261027-2542",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:27:59.463Z",
+          "timestamp": "2026-10-27T08:27:59.463Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:27:59.463Z",
+      "updatedAt": "2026-10-27T08:27:59.463Z"
+    },
+    {
+      "id": "pos-order-4a8e5c98-2880-4ef9-844f-5ad4a45a2299",
+      "orderNumber": "POS-20261027-6185",
+      "userId": null,
+      "source": "POS",
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "CASH",
+      "shippingAmount": 0,
+      "subtotal": 3299,
+      "discountAmount": 0,
+      "taxAmount": 165,
+      "totalAmount": 3464,
+      "cashTendered": 3799,
+      "changeDue": 335,
+      "posCashierId": "admin-test",
+      "posCashierName": "Lead Cashier Chandni",
+      "posNotes": "Counter Test Cash Sale",
+      "customerDetails": {
+        "id": null,
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "email": "patron@example.com",
+        "isWalkIn": true
+      },
+      "customer": {
+        "id": null,
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "email": "patron@example.com",
+        "isWalkIn": true
+      },
+      "shippingAddress": {
+        "name": "Royal Heritage Patron",
+        "phone": "+91 98765 00000",
+        "addressLine1": "In-Store Counter Pickup",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "pincode": "302001"
+      },
+      "items": [
+        {
+          "id": "item-acbee7c3-a9eb-4fd1-a14a-9b5c27423aef",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Artisan Couture Piece",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "isStockDeducted": true,
+      "idempotencyKey": "test-idemp-1793089641138",
+      "statusHistory": [
+        {
+          "id": "shist-bf9246d2-af4c-438d-b24c-9780200574cb",
+          "orderId": "pos-order-4a8e5c98-2880-4ef9-844f-5ad4a45a2299",
+          "previousStatus": "PENDING",
+          "newStatus": "DELIVERED",
+          "adminUserId": "admin-test",
+          "adminName": "Lead Cashier Chandni",
+          "note": "In-store counter checkout completed via CASH by Lead Cashier Chandni. Receipt: POS-20261027-6185",
+          "isCustomerSafe": true,
+          "inventoryAction": "DEDUCTED",
+          "createdAt": "2026-10-27T08:27:21.257Z",
+          "timestamp": "2026-10-27T08:27:21.257Z"
+        }
+      ],
+      "createdAt": "2026-10-27T08:27:21.257Z",
+      "updatedAt": "2026-10-27T08:27:21.257Z"
+    },
+    {
+      "id": "order-seed-1",
+      "orderNumber": "CBC-782103-4921",
+      "userId": "customer-demo-uuid-2",
+      "customer": {
+        "id": "customer-demo-uuid-2",
+        "name": "Demo Customer",
+        "email": "customer@collectionsbychandni.in",
+        "phone": "+919812345678"
+      },
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "ONLINE_PREPAID",
+      "subtotal": 4999,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 4999,
+      "isStockDeducted": true,
+      "shippingAddress": {
+        "name": "Demo Customer",
+        "phone": "+919812345678",
+        "addressLine1": "Flat 402, Royal Palms Residency",
+        "addressLine2": "Koregaon Park South",
+        "landmark": "Near Osho Garden",
+        "city": "Pune",
+        "state": "Maharashtra",
+        "pincode": "411001",
+        "country": "India",
+        "addressType": "HOME"
+      },
+      "items": [
+        {
+          "id": "orditem-seed-1",
+          "orderId": "order-seed-1",
+          "productVariantId": "demo-variant-saree-1",
+          "productId": "demo-prod-saree-1",
+          "productTitle": "Royal Silk Banarasi Saree",
+          "sku": "CBC-RSB-NVY-OS",
+          "size": "One Size",
+          "color": "Navy Blue & Gold Zari",
+          "quantity": 1,
+          "unitPrice": 4999,
+          "totalPrice": 4999,
+          "imageUrl": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "PENDING",
+          "timestamp": "2026-09-20T10:00:00.000Z",
+          "note": "Order registered in atelier",
+          "changedBy": "System"
+        },
+        {
+          "status": "CONFIRMED",
+          "timestamp": "2026-09-20T11:30:00.000Z",
+          "note": "Artisan handloom inspection confirmed",
+          "changedBy": "Admin"
+        },
+        {
+          "status": "PACKED",
+          "timestamp": "2026-09-21T14:00:00.000Z",
+          "note": "Packed in bespoke heirloom box",
+          "changedBy": "Admin"
+        },
+        {
+          "status": "SHIPPED",
+          "timestamp": "2026-09-22T09:00:00.000Z",
+          "note": "Dispatched via insured courier",
+          "changedBy": "Admin"
+        },
+        {
+          "status": "DELIVERED",
+          "timestamp": "2026-09-24T16:45:00.000Z",
+          "note": "Delivered to patron residence",
+          "changedBy": "Courier"
+        }
+      ],
+      "createdAt": "2026-09-20T10:00:00.000Z",
+      "updatedAt": "2026-09-24T16:45:00.000Z"
+    },
+    {
+      "id": "order-seed-2",
+      "orderNumber": "CBC-894105-3120",
+      "userId": "customer-demo-uuid-2",
+      "customer": {
+        "id": "customer-demo-uuid-2",
+        "name": "Demo Customer",
+        "email": "customer@collectionsbychandni.in",
+        "phone": "+919812345678"
+      },
+      "status": "CONFIRMED",
+      "paymentStatus": "AWAITING_PAYMENT",
+      "paymentMethod": "PENDING",
+      "subtotal": 3299,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 3299,
+      "isStockDeducted": true,
+      "shippingAddress": {
+        "name": "Demo Customer",
+        "phone": "+919812345678",
+        "addressLine1": "Flat 402, Royal Palms Residency",
+        "addressLine2": "Koregaon Park South",
+        "landmark": "Near Osho Garden",
+        "city": "Pune",
+        "state": "Maharashtra",
+        "pincode": "411001",
+        "country": "India",
+        "addressType": "HOME"
+      },
+      "items": [
+        {
+          "id": "orditem-seed-2",
+          "orderId": "order-seed-2",
+          "productVariantId": "var-5-1",
+          "productId": "prod-5",
+          "productTitle": "Embroidered Women's Kurti",
+          "sku": "CBC-EWK-CRM-S",
+          "size": "S",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299,
+          "imageUrl": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "PENDING",
+          "timestamp": "2026-10-10T08:30:00.000Z",
+          "note": "Order registered via checkout",
+          "changedBy": "System"
+        },
+        {
+          "status": "CONFIRMED",
+          "timestamp": "2026-10-10T09:15:00.000Z",
+          "note": "Confirmed for fulfillment",
+          "changedBy": "Admin"
+        }
+      ],
+      "createdAt": "2026-10-10T08:30:00.000Z",
+      "updatedAt": "2026-10-10T09:15:00.000Z"
+    },
+    {
+      "id": "order-seed-priya-1",
+      "orderNumber": "CBC-910234-1182",
+      "userId": "customer-seed-priya",
+      "customer": {
+        "id": "customer-seed-priya",
+        "name": "Priya Sharma",
+        "email": "priya.sharma@example.com",
+        "phone": "+919820123456"
+      },
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "UPI",
+      "subtotal": 3499,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 3499,
+      "isStockDeducted": true,
+      "items": [
+        {
+          "id": "item-p1",
+          "orderId": "order-seed-priya-1",
+          "productVariantId": "var-1-2",
+          "productId": "prod-1",
+          "productTitle": "Women's Designer Kurti",
+          "sku": "CBC-WDK-PNK-M",
+          "size": "M",
+          "color": "Blush Pink",
+          "quantity": 1,
+          "unitPrice": 2499,
+          "totalPrice": 2499
+        },
+        {
+          "id": "item-p2",
+          "orderId": "order-seed-priya-1",
+          "productVariantId": "var-2-1",
+          "productId": "prod-2",
+          "productTitle": "Pure Chanderi Zari Dupatta",
+          "sku": "CBC-CZD-GLD-OS",
+          "size": "One Size",
+          "color": "Metallic Gold",
+          "quantity": 1,
+          "unitPrice": 1000,
+          "totalPrice": 1000
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "DELIVERED",
+          "timestamp": "2026-10-06T15:00:00.000Z",
+          "note": "Delivered"
+        }
+      ],
+      "createdAt": "2026-10-03T11:00:00.000Z",
+      "updatedAt": "2026-10-06T15:00:00.000Z"
+    },
+    {
+      "id": "order-seed-ananya-1",
+      "orderNumber": "CBC-940381-8821",
+      "userId": "customer-seed-ananya",
+      "customer": {
+        "id": "customer-seed-ananya",
+        "name": "Ananya Desai",
+        "email": "ananya.desai@example.com",
+        "phone": "+919876112233"
+      },
+      "status": "CONFIRMED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "NET_BANKING",
+      "subtotal": 5999,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 5999,
+      "isStockDeducted": true,
+      "items": [
+        {
+          "id": "item-a1",
+          "orderId": "order-seed-ananya-1",
+          "productVariantId": "var-3-2",
+          "productId": "prod-3",
+          "productTitle": "Festive Anarkali Gown",
+          "sku": "CBC-FAG-MRN-M",
+          "size": "M",
+          "color": "Deep Maroon",
+          "quantity": 1,
+          "unitPrice": 5999,
+          "totalPrice": 5999
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "CONFIRMED",
+          "timestamp": "2026-10-06T12:00:00.000Z",
+          "note": "Confirmed"
+        }
+      ],
+      "createdAt": "2026-10-06T11:30:00.000Z",
+      "updatedAt": "2026-10-06T12:00:00.000Z"
+    },
+    {
+      "id": "order-seed-meera-1",
+      "orderNumber": "CBC-951820-4401",
+      "userId": "customer-seed-meera",
+      "customer": {
+        "id": "customer-seed-meera",
+        "name": "Meera Iyer",
+        "email": "meera.iyer@example.com",
+        "phone": "+919844556677"
+      },
+      "status": "SHIPPED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "UPI",
+      "subtotal": 5498,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 5498,
+      "isStockDeducted": true,
+      "items": [
+        {
+          "id": "item-m1",
+          "orderId": "order-seed-meera-1",
+          "productVariantId": "var-4-1",
+          "productId": "prod-4",
+          "productTitle": "Kundan Polki Choker Set",
+          "sku": "CBC-KPC-GLD-OS",
+          "size": "One Size",
+          "color": "Gold & Kundan",
+          "quantity": 1,
+          "unitPrice": 2999,
+          "totalPrice": 2999
+        },
+        {
+          "id": "item-m2",
+          "orderId": "order-seed-meera-1",
+          "productVariantId": "var-1-5",
+          "productId": "prod-1",
+          "productTitle": "Women's Designer Kurti",
+          "sku": "CBC-WDK-TEA-S",
+          "size": "S",
+          "color": "Royal Teal",
+          "quantity": 1,
+          "unitPrice": 2499,
+          "totalPrice": 2499
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "SHIPPED",
+          "timestamp": "2026-10-15T10:00:00.000Z",
+          "note": "Dispatched via premium express"
+        }
+      ],
+      "createdAt": "2026-10-14T14:20:00.000Z",
+      "updatedAt": "2026-10-15T10:00:00.000Z"
+    },
+    {
+      "id": "order-seed-cancelled-1",
+      "orderNumber": "CBC-962019-5512",
+      "userId": "customer-seed-kavita",
+      "customer": {
+        "id": "customer-seed-kavita",
+        "name": "Kavita Patel",
+        "email": "kavita.patel@example.com",
+        "phone": "+919811223344"
+      },
+      "status": "CANCELLED",
+      "paymentStatus": "FAILED",
+      "paymentMethod": "ONLINE_PREPAID",
+      "subtotal": 2499,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 2499,
+      "isStockDeducted": false,
+      "items": [
+        {
+          "id": "item-k1",
+          "orderId": "order-seed-cancelled-1",
+          "productVariantId": "var-1-1",
+          "productId": "prod-1",
+          "productTitle": "Women's Designer Kurti",
+          "sku": "CBC-WDK-PNK-S",
+          "size": "S",
+          "color": "Blush Pink",
+          "quantity": 1,
+          "unitPrice": 2499,
+          "totalPrice": 2499
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "CANCELLED",
+          "timestamp": "2026-10-16T16:30:00.000Z",
+          "note": "Payment gateway timeout cancelled"
+        }
+      ],
+      "createdAt": "2026-10-16T16:00:00.000Z",
+      "updatedAt": "2026-10-16T16:30:00.000Z"
+    },
+    {
+      "id": "order-seed-recent-priya-2",
+      "orderNumber": "CBC-970114-6623",
+      "userId": "customer-seed-priya",
+      "customer": {
+        "id": "customer-seed-priya",
+        "name": "Priya Sharma",
+        "email": "priya.sharma@example.com",
+        "phone": "+919820123456"
+      },
+      "status": "PACKED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "UPI",
+      "subtotal": 3998,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 3998,
+      "isStockDeducted": true,
+      "items": [
+        {
+          "id": "item-p3",
+          "orderId": "order-seed-recent-priya-2",
+          "productVariantId": "var-2-1",
+          "productId": "prod-2",
+          "productTitle": "Pure Chanderi Zari Dupatta",
+          "sku": "CBC-CZD-GLD-OS",
+          "size": "One Size",
+          "color": "Metallic Gold",
+          "quantity": 2,
+          "unitPrice": 1999,
+          "totalPrice": 3998
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "PACKED",
+          "timestamp": "2026-10-18T14:00:00.000Z",
+          "note": "Heirloom packaged"
+        }
+      ],
+      "createdAt": "2026-10-18T10:15:00.000Z",
+      "updatedAt": "2026-10-18T14:00:00.000Z"
+    },
+    {
+      "id": "order-seed-today-1",
+      "orderNumber": "CBC-981240-7734",
+      "userId": "customer-demo-uuid-2",
+      "customer": {
+        "id": "customer-demo-uuid-2",
+        "name": "Demo Customer",
+        "email": "customer@collectionsbychandni.in",
+        "phone": "+919812345678"
+      },
+      "status": "PROCESSING",
+      "paymentStatus": "PAID",
+      "paymentMethod": "ONLINE_PREPAID",
+      "subtotal": 3299,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 3299,
+      "isStockDeducted": true,
+      "shippingAddress": {
+        "name": "Demo Customer",
+        "phone": "+919812345678",
+        "addressLine1": "Flat 402, Royal Palms Residency",
+        "addressLine2": "Koregaon Park South",
+        "landmark": "Near Osho Garden",
+        "city": "Pune",
+        "state": "Maharashtra",
+        "pincode": "411001",
+        "country": "India",
+        "addressType": "HOME"
+      },
+      "items": [
+        {
+          "id": "item-t1",
+          "orderId": "order-seed-today-1",
+          "productVariantId": "var-5-2",
+          "productId": "prod-5",
+          "productTitle": "Embroidered Women's Kurti",
+          "sku": "CBC-EWK-CRM-M",
+          "size": "M",
+          "color": "Crimson Red",
+          "quantity": 1,
+          "unitPrice": 3299,
+          "totalPrice": 3299
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "PROCESSING",
+          "timestamp": "2026-10-19T07:00:00.000Z",
+          "note": "Pattern cutting and finishing"
+        }
+      ],
+      "createdAt": "2026-10-19T06:30:00.000Z",
+      "updatedAt": "2026-10-19T07:00:00.000Z"
+    },
+    {
+      "id": "order-seed-lastmonth-1",
+      "orderNumber": "CBC-852109-2211",
+      "userId": "customer-seed-ananya",
+      "customer": {
+        "id": "customer-seed-ananya",
+        "name": "Ananya Desai",
+        "email": "ananya.desai@example.com",
+        "phone": "+919876112233"
+      },
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "paymentMethod": "NET_BANKING",
+      "subtotal": 4999,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 4999,
+      "isStockDeducted": true,
+      "items": [
+        {
+          "id": "item-lm1",
+          "orderId": "order-seed-lastmonth-1",
+          "productVariantId": "demo-variant-saree-1",
+          "productId": "demo-prod-saree-1",
+          "productTitle": "Royal Silk Banarasi Saree",
+          "sku": "CBC-RSB-NVY-OS",
+          "size": "One Size",
+          "color": "Navy Blue & Gold Zari",
+          "quantity": 1,
+          "unitPrice": 4999,
+          "totalPrice": 4999
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "DELIVERED",
+          "timestamp": "2026-09-15T16:00:00.000Z",
+          "note": "Delivered"
+        }
+      ],
+      "createdAt": "2026-09-12T09:00:00.000Z",
+      "updatedAt": "2026-09-15T16:00:00.000Z"
+    },
+    {
+      "id": "order-seed-refunded-1",
+      "orderNumber": "CBC-861042-3322",
+      "userId": "customer-seed-kavita",
+      "customer": {
+        "id": "customer-seed-kavita",
+        "name": "Kavita Patel",
+        "email": "kavita.patel@example.com",
+        "phone": "+919811223344"
+      },
+      "status": "REFUNDED",
+      "paymentStatus": "REFUNDED",
+      "paymentMethod": "ONLINE_PREPAID",
+      "subtotal": 2499,
+      "shippingAmount": 0,
+      "discountAmount": 0,
+      "totalAmount": 2499,
+      "isStockDeducted": true,
+      "items": [
+        {
+          "id": "item-rf1",
+          "orderId": "order-seed-refunded-1",
+          "productVariantId": "var-1-3",
+          "productId": "prod-1",
+          "productTitle": "Women's Designer Kurti",
+          "sku": "CBC-WDK-PNK-L",
+          "size": "L",
+          "color": "Blush Pink",
+          "quantity": 1,
+          "unitPrice": 2499,
+          "totalPrice": 2499
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "REFUNDED",
+          "timestamp": "2026-09-29T11:00:00.000Z",
+          "note": "Full payment refunded to original payment method"
+        }
+      ],
+      "createdAt": "2026-09-28T15:00:00.000Z",
+      "updatedAt": "2026-09-29T11:00:00.000Z"
+    }
   ]
 }

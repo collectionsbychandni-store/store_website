@@ -744,7 +744,7 @@ export default function SalesReport() {
                   No orders recorded in this reporting period.
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {/* Column 1: Order Status */}
                   <div className="rounded-xl border border-stone-200 bg-stone-50/40 p-4 space-y-3">
                     <h4 className="text-xs font-semibold uppercase tracking-wider text-stone-700 flex items-center space-x-1.5">
@@ -802,6 +802,25 @@ export default function SalesReport() {
                         <div key={item.paymentMethod} className="py-2.5 flex items-center justify-between">
                           <div>
                             <span className="font-semibold text-stone-800 block">{item.paymentMethod}</span>
+                            <span className="text-[11px] text-stone-500">{item.count} orders ({item.shareOfOrders}%)</span>
+                          </div>
+                          <span className="font-serif font-bold text-stone-900">{item.amountFormatted}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Column 4: Sales Channel */}
+                  <div className="rounded-xl border border-stone-200 bg-stone-50/40 p-4 space-y-3">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-stone-700 flex items-center space-x-1.5">
+                      <Layers size={14} className="text-stone-500" />
+                      <span>By Sales Channel</span>
+                    </h4>
+                    <div className="divide-y divide-stone-200/60 text-xs">
+                      {(breakdown.bySalesChannel || []).map((item) => (
+                        <div key={item.channel} className="py-2.5 flex items-center justify-between">
+                          <div>
+                            <span className="font-semibold text-stone-800 block">{item.channel}</span>
                             <span className="text-[11px] text-stone-500">{item.count} orders ({item.shareOfOrders}%)</span>
                           </div>
                           <span className="font-serif font-bold text-stone-900">{item.amountFormatted}</span>

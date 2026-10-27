@@ -28,6 +28,7 @@ import BannerManagement from '../pages/admin/BannerManagement';
 import CustomerManagement from '../pages/admin/CustomerManagement';
 import SalesReport from '../pages/admin/SalesReport';
 import AdminSettings from '../pages/admin/AdminSettings';
+import PosBilling from '../pages/admin/PosBilling';
 import AdminPlaceholder from '../pages/admin/AdminPlaceholder';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -46,6 +47,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/pos"
+        element={
+          <ProtectedRoute>
+            <PosBilling />
           </ProtectedRoute>
         }
       />
