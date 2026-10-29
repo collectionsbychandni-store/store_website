@@ -1,54 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, ArrowUpRight, CheckCircle2, Clock, Truck, PackageCheck } from 'lucide-react';
-
-const DEMO_ORDERS = [
-  {
-    id: 'CBC-9481',
-    customer: { name: 'Pooja Sharma', email: 'pooja.s@example.com' },
-    date: '14 Oct 2026',
-    items: "Women's Designer Kurti (Blush Pink)",
-    amount: 2499,
-    paymentStatus: 'Paid',
-    orderStatus: 'DELIVERED',
-  },
-  {
-    id: 'CBC-9480',
-    customer: { name: 'Ananya Verma', email: 'ananya.v@example.com' },
-    date: '13 Oct 2026',
-    items: 'Elegant Party Wear Dress (Wine Burgundy)',
-    amount: 4299,
-    paymentStatus: 'Paid',
-    orderStatus: 'SHIPPED',
-  },
-  {
-    id: 'CBC-9479',
-    customer: { name: 'Ritu Sen', email: 'ritu.sen@example.com' },
-    date: '13 Oct 2026',
-    items: 'Floral Print Kurti (Sage Green)',
-    amount: 1599,
-    paymentStatus: 'Paid',
-    orderStatus: 'CONFIRMED',
-  },
-  {
-    id: 'CBC-9478',
-    customer: { name: 'Meera Patel', email: 'meera.p@example.com' },
-    date: '12 Oct 2026',
-    items: "Embroidered Women's Kurti (Crimson Red)",
-    amount: 3299,
-    paymentStatus: 'COD Pending',
-    orderStatus: 'PACKED',
-  },
-  {
-    id: 'CBC-9477',
-    customer: { name: 'Sneha Kulkarni', email: 'sneha.k@example.com' },
-    date: '11 Oct 2026',
-    items: 'Cotton Casual Kurti + Kundan Earrings',
-    amount: 2698,
-    paymentStatus: 'Paid',
-    orderStatus: 'DELIVERED',
-  },
-];
+const DEMO_ORDERS = [];
 
 const statusStyles = {
   DELIVERED: {
@@ -76,8 +29,8 @@ const statusStyles = {
 /**
  * Recent Orders Table Component
  */
-export default function RecentOrdersTable({ orders = DEMO_ORDERS, isEmpty = false }) {
-  if (isEmpty || orders.length === 0) {
+export default function RecentOrdersTable({ orders = [], isEmpty = false }) {
+  if (isEmpty || !orders || orders.length === 0) {
     return (
       <div className="rounded-xl border border-stone-200/90 bg-white p-6 shadow-xs">
         <div className="flex items-center justify-between pb-4 border-b border-stone-100">
@@ -100,8 +53,8 @@ export default function RecentOrdersTable({ orders = DEMO_ORDERS, isEmpty = fals
             <ShoppingBag size={22} />
           </div>
           <p className="font-serif text-base font-medium text-stone-900">No Orders Received Yet</p>
-          <p className="text-xs text-stone-500 mt-1">
-            Customer purchases made through the storefront will appear here.
+          <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">
+            Live orders placed through the online boutique or at the in-store POS counter will appear here in real time.
           </p>
         </div>
       </div>
@@ -117,8 +70,8 @@ export default function RecentOrdersTable({ orders = DEMO_ORDERS, isEmpty = fals
             <h2 className="font-serif text-lg font-semibold tracking-tight text-stone-900">
               Recent Orders
             </h2>
-            <span className="rounded bg-rose-50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-rose-800 font-semibold ring-1 ring-rose-200/60">
-              Demo Data
+            <span className="rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-emerald-800 font-semibold ring-1 ring-emerald-200/60">
+              Live Feed
             </span>
           </div>
           <p className="text-xs text-stone-500 mt-0.5">

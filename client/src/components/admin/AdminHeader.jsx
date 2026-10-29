@@ -61,10 +61,16 @@ export default function AdminHeader({ onOpenSidebar, pageTitle = 'Dashboard' }) 
             type="button"
             onClick={onOpenSidebar}
             aria-label="Open sidebar navigation"
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 hover:text-stone-900 lg:hidden focus:outline-none focus:ring-1 focus:ring-rose-500"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 hover:text-stone-900 lg:hidden focus:outline-none focus:ring-1 focus:ring-rose-500 shrink-0"
           >
             <Menu size={18} />
           </button>
+
+          <img
+            src="/assets/aistudio/logo_454bd7ce.png"
+            alt="Collections by Chandni"
+            className="h-9 w-9 object-contain lg:hidden shrink-0"
+          />
 
           <div className="flex flex-col">
             <div className="flex items-center space-x-2">

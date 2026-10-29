@@ -352,9 +352,9 @@ export default function CustomerManagement() {
         </div>
 
         {/* Toolbar: Search, Filters, and Sorting */}
-        <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="rounded-xl border border-stone-200/90 bg-white p-3.5 sm:p-4 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3 max-w-full">
           {/* Search Box */}
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 w-full lg:max-w-md min-w-0">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-stone-400">
               <Search size={15} />
             </div>
@@ -377,7 +377,7 @@ export default function CustomerManagement() {
           </div>
 
           {/* Filters & Sorting */}
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 sm:gap-2.5 w-full lg:w-auto max-w-full">
             {/* Status Filter */}
             <select
               value={statusFilter}
@@ -385,7 +385,7 @@ export default function CustomerManagement() {
                 setStatusFilter(e.target.value);
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
-              className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-700 focus:border-rose-600 focus:outline-none focus:ring-1 focus:ring-rose-600"
+              className="w-full sm:w-auto rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-700 focus:border-rose-600 focus:outline-none focus:ring-1 focus:ring-rose-600 truncate"
             >
               <option value="ALL">All Account Statuses</option>
               <option value="ACTIVE">Active Patrons Only</option>
@@ -401,7 +401,7 @@ export default function CustomerManagement() {
                 setSortOrder(so);
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
-              className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-700 focus:border-rose-600 focus:outline-none focus:ring-1 focus:ring-rose-600"
+              className="w-full sm:w-auto rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs text-stone-700 focus:border-rose-600 focus:outline-none focus:ring-1 focus:ring-rose-600 truncate"
             >
               <option value="createdAt-desc">Registration: Newest First</option>
               <option value="createdAt-asc">Registration: Oldest First</option>
@@ -412,9 +412,11 @@ export default function CustomerManagement() {
             </select>
 
             {/* Registration Date Range Filters */}
-            <div className="flex items-center space-x-1.5 bg-stone-50/80 border border-stone-200 rounded-lg px-2.5 py-1 text-xs text-stone-600">
-              <Calendar size={13} className="text-stone-400 shrink-0" />
-              <span className="text-[11px] text-stone-400">Joined:</span>
+            <div className="flex items-center gap-1.5 bg-stone-50/80 border border-stone-200 rounded-lg px-2.5 py-1 text-xs text-stone-600 w-full sm:w-auto max-w-full overflow-hidden">
+              <div className="flex items-center space-x-1 shrink-0">
+                <Calendar size={13} className="text-stone-400" />
+                <span className="text-[11px] text-stone-400 hidden xs:inline sm:inline">Joined:</span>
+              </div>
               <input
                 type="date"
                 value={startDate}
@@ -422,10 +424,10 @@ export default function CustomerManagement() {
                   setStartDate(e.target.value);
                   setPagination((prev) => ({ ...prev, page: 1 }));
                 }}
-                className="bg-transparent text-xs text-stone-800 focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs text-stone-800 focus:outline-none cursor-pointer flex-1 min-w-0 max-w-[125px]"
                 title="Registration Start Date"
               />
-              <span className="text-stone-400">to</span>
+              <span className="text-stone-400 shrink-0 text-[10px]">to</span>
               <input
                 type="date"
                 value={endDate}
@@ -433,7 +435,7 @@ export default function CustomerManagement() {
                   setEndDate(e.target.value);
                   setPagination((prev) => ({ ...prev, page: 1 }));
                 }}
-                className="bg-transparent text-xs text-stone-800 focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs text-stone-800 focus:outline-none cursor-pointer flex-1 min-w-0 max-w-[125px]"
                 title="Registration End Date"
               />
             </div>
@@ -442,7 +444,7 @@ export default function CustomerManagement() {
               <button
                 type="button"
                 onClick={handleClearFilters}
-                className="rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-xs font-semibold text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors cursor-pointer"
+                className="w-full sm:w-auto rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-xs font-semibold text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors cursor-pointer text-center"
               >
                 Clear Filters
               </button>

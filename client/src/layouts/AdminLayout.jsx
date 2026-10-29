@@ -7,7 +7,7 @@ import AdminHeader from '../components/admin/AdminHeader';
  * Shared Admin Layout Component
  * Provides responsive desktop sidebar, mobile drawer, administrative header, and main content canvas.
  */
-export default function AdminLayout({ children, pageTitle = 'Dashboard' }) {
+export default function AdminLayout({ children, pageTitle = 'Dashboard', noPadding = false }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -27,8 +27,8 @@ export default function AdminLayout({ children, pageTitle = 'Dashboard' }) {
         />
 
         {/* Content Viewport */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
-          <div className="mx-auto max-w-7xl">
+        <main className={`flex-1 ${noPadding ? 'p-0 overflow-hidden flex flex-col' : 'p-4 sm:p-6 lg:p-8 overflow-y-auto'}`}>
+          <div className={noPadding ? 'w-full flex-1 flex flex-col min-h-0' : 'mx-auto max-w-7xl'}>
             {children ? children : <Outlet />}
           </div>
         </main>

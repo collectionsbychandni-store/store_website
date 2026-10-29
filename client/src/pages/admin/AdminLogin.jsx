@@ -80,16 +80,23 @@ export default function AdminLogin() {
           {/* Card Container */}
           <div className="bg-white border border-stone-200 p-8 sm:p-10 rounded-sm shadow-xs space-y-8">
             {/* Header */}
-            <div className="text-center space-y-2">
-              <span className="text-[10px] uppercase tracking-[0.25em] text-stone-500 font-medium block">
-                Atelier Administration
-              </span>
-              <h1 className="font-serif text-3xl font-semibold text-stone-950 tracking-tight">
-                Collections by Chandni
-              </h1>
-              <p className="font-serif italic text-stone-600 text-lg">
-                Admin Portal
-              </p>
+            <div className="text-center space-y-3">
+              <img
+                src="/assets/aistudio/logo_454bd7ce.png"
+                alt="Collections by Chandni Emblem"
+                className="h-20 w-20 mx-auto object-contain drop-shadow-xs"
+              />
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-stone-500 font-medium block">
+                  Atelier Administration
+                </span>
+                <h1 className="font-serif text-3xl font-semibold text-stone-950 tracking-tight">
+                  Collections by Chandni
+                </h1>
+                <p className="font-serif italic text-stone-600 text-base">
+                  Admin Portal
+                </p>
+              </div>
             </div>
 
             {/* Error Message Alert */}
@@ -125,7 +132,7 @@ export default function AdminLogin() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isSubmitting}
-                    placeholder="admin@collectionsbychandni.in"
+                    placeholder="collectionsbychandni@gmail.com"
                     className="block w-full pl-10 pr-3.5 py-2.5 text-sm bg-stone-50/50 border border-stone-300 rounded-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 disabled:opacity-60 transition-colors"
                   />
                 </div>

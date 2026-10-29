@@ -78,8 +78,8 @@ export default function PosRecentBillsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-xs">
-      <div className="bg-white border border-stone-200 rounded-xs shadow-2xl max-w-4xl w-full h-[85vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-stone-900/50 backdrop-blur-xs">
+      <div className="bg-white border border-stone-200 rounded-xs shadow-2xl max-w-4xl w-full h-[90vh] sm:h-[85vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-stone-100 bg-[#FAF9F5]">
           <div>
@@ -153,7 +153,7 @@ export default function PosRecentBillsModal({
         </div>
 
         {/* Invoices List / Table */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-x-auto overflow-y-auto">
           {loading && bills.length === 0 ? (
             <div className="py-16 text-center text-stone-400">
               <RefreshCw size={24} className="animate-spin mx-auto mb-2 text-[#781D42]" />
@@ -168,7 +168,7 @@ export default function PosRecentBillsModal({
               </p>
             </div>
           ) : (
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full min-w-[700px] text-left border-collapse text-xs">
               <thead>
                 <tr className="border-b border-stone-200 bg-stone-50 text-[10px] font-semibold uppercase tracking-wider text-stone-500 sticky top-0">
                   <th className="py-3 px-4">Invoice No</th>

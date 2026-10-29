@@ -586,11 +586,11 @@ export default function InventoryManagement() {
         </div>
 
         {/* Navigation Tabs Bar */}
-        <div className="flex border-b border-stone-200">
+        <div className="flex border-b border-stone-200 overflow-x-auto scrollbar-none sm:scrollbar-thin whitespace-nowrap -mx-4 px-4 sm:mx-0 sm:px-0">
           <button
             type="button"
             onClick={() => setActiveTab('all')}
-            className={`flex items-center space-x-2 py-3 px-4 border-b-2 text-xs font-semibold cursor-pointer transition-colors ${
+            className={`flex shrink-0 items-center space-x-2 py-3 px-3.5 sm:px-4 border-b-2 text-xs font-semibold cursor-pointer transition-colors ${
               activeTab === 'all'
                 ? 'border-rose-800 text-rose-900'
                 : 'border-transparent text-stone-500 hover:text-stone-800 hover:border-stone-300'
@@ -603,7 +603,7 @@ export default function InventoryManagement() {
           <button
             type="button"
             onClick={() => setActiveTab('alerts')}
-            className={`flex items-center space-x-2 py-3 px-4 border-b-2 text-xs font-semibold cursor-pointer transition-colors ${
+            className={`flex shrink-0 items-center space-x-2 py-3 px-3.5 sm:px-4 border-b-2 text-xs font-semibold cursor-pointer transition-colors ${
               activeTab === 'alerts'
                 ? 'border-rose-800 text-rose-900'
                 : 'border-transparent text-stone-500 hover:text-stone-800 hover:border-stone-300'
@@ -621,7 +621,7 @@ export default function InventoryManagement() {
           <button
             type="button"
             onClick={() => setActiveTab('reports')}
-            className={`flex items-center space-x-2 py-3 px-4 border-b-2 text-xs font-semibold cursor-pointer transition-colors ${
+            className={`flex shrink-0 items-center space-x-2 py-3 px-3.5 sm:px-4 border-b-2 text-xs font-semibold cursor-pointer transition-colors ${
               activeTab === 'reports'
                 ? 'border-rose-800 text-rose-900'
                 : 'border-transparent text-stone-500 hover:text-stone-800 hover:border-stone-300'
@@ -634,7 +634,7 @@ export default function InventoryManagement() {
           <button
             type="button"
             onClick={() => setActiveTab('history')}
-            className={`flex items-center space-x-2 py-3 px-4 border-b-2 text-xs font-semibold cursor-pointer transition-colors ${
+            className={`flex shrink-0 items-center space-x-2 py-3 px-3.5 sm:px-4 border-b-2 text-xs font-semibold cursor-pointer transition-colors ${
               activeTab === 'history'
                 ? 'border-rose-800 text-rose-900'
                 : 'border-transparent text-stone-500 hover:text-stone-800 hover:border-stone-300'
@@ -1026,7 +1026,7 @@ export default function InventoryManagement() {
               </div>
 
               {/* Status Filter Buttons */}
-              <div className="flex items-center space-x-2 shrink-0">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={() => setAlertsFilter('ALL_ALERTS')}

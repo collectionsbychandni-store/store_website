@@ -73,11 +73,11 @@ export default function PosReceiptModal({
     bill.customerDetails?.phone || bill.customer?.phone || null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-stone-900/60 backdrop-blur-xs overflow-y-auto">
       {/* Container with Print Styles */}
-      <div className="bg-white border border-stone-200 rounded-xs shadow-2xl max-w-md w-full my-8 overflow-hidden print:max-w-none print:w-full print:border-none print:shadow-none print:m-0">
+      <div className="bg-white border border-stone-200 rounded-xs shadow-2xl max-w-md w-full my-auto max-h-[92vh] flex flex-col overflow-hidden print:max-w-none print:w-full print:border-none print:shadow-none print:m-0">
         {/* Screen Header (Hidden on Print) */}
-        <div className="flex items-center justify-between p-4 bg-[#781D42] text-amber-50 print:hidden">
+        <div className="flex items-center justify-between p-3 sm:p-4 bg-[#781D42] text-amber-50 print:hidden shrink-0">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={18} className="text-emerald-400" />
             <span className="font-serif font-semibold text-sm">
@@ -97,10 +97,15 @@ export default function PosReceiptModal({
         <div
           ref={receiptRef}
           id="pos-printable-receipt"
-          className="p-6 text-stone-900 font-mono text-xs bg-white space-y-4 print:p-0"
+          className="p-4 sm:p-6 text-stone-900 font-mono text-xs bg-white space-y-4 print:p-0 overflow-y-auto flex-1"
         >
           {/* Atelier Brand Header */}
-          <div className="text-center space-y-1 border-b border-dashed border-stone-300 pb-4">
+          <div className="text-center space-y-1.5 border-b border-dashed border-stone-300 pb-4">
+            <img
+              src="/assets/aistudio/logo_454bd7ce.png"
+              alt="Collections by Chandni"
+              className="h-14 w-14 mx-auto object-contain mb-1"
+            />
             <div className="font-serif text-lg font-bold text-[#781D42] tracking-wider uppercase">
               {store.storeName}
             </div>
@@ -256,7 +261,7 @@ export default function PosReceiptModal({
         </div>
 
         {/* Screen Action Footer (Hidden on Print) */}
-        <div className="p-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-3 print:hidden">
+        <div className="p-3 sm:p-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-2 print:hidden shrink-0">
           <button
             type="button"
             onClick={onClose}

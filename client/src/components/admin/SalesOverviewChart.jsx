@@ -1,31 +1,19 @@
 import React, { useState } from 'react';
 import { BarChart3, Info } from 'lucide-react';
 
-// Monthly demo sales data for Collections by Chandni fashion brand
-const DEMO_MONTHLY_DATA = [
-  { month: 'Jan', revenue: 98000, orders: 42 },
-  { month: 'Feb', revenue: 115000, orders: 49 },
-  { month: 'Mar', revenue: 142000, orders: 61 },
-  { month: 'Apr', revenue: 128000, orders: 55 },
-  { month: 'May', revenue: 164000, orders: 70 },
-  { month: 'Jun', revenue: 189000, orders: 82 },
-  { month: 'Jul', revenue: 172000, orders: 74 },
-  { month: 'Aug', revenue: 210000, orders: 89 },
-  { month: 'Sep', revenue: 235000, orders: 98 },
-  { month: 'Oct', revenue: 278000, orders: 116 },
-  { month: 'Nov', revenue: 245000, orders: 104 },
-  { month: 'Dec', revenue: 310000, orders: 132 },
-];
+// Empty initial fallback data
+const DEFAULT_EMPTY_DATA = [];
 
 /**
- * Sales Overview Chart Component
+ * Sales Overview Chart Component (Live Data)
  * Responsive, zero-dependency SVG bar chart styled with boutique fashion aesthetics.
  */
-export default function SalesOverviewChart({ isLoading = false, isEmpty = false }) {
-  const [activeIdx, setActiveIdx] = useState(9); // Default highlight October
+export default function SalesOverviewChart({ data: propData = null, isLoading = false, isEmpty = false }) {
+  const data = propData !== null ? propData : DEFAULT_EMPTY_DATA;
+  const [activeIdx, setActiveIdx] = useState(data.length > 0 ? data.length - 1 : null);
 
-  const data = isEmpty ? [] : DEMO_MONTHLY_DATA;
-  const maxRevenue = Math.max(...DEMO_MONTHLY_DATA.map((d) => d.revenue), 1);
+  const totalRevenue = data.reduce((sum, d) => sum + (d.revenue || 0), 0);
+  const maxRevenue = Math.max(...data.map((d) => d.revenue || 0), 1000);
 
   if (isLoading) {
     return (
@@ -44,21 +32,21 @@ export default function SalesOverviewChart({ isLoading = false, isEmpty = false 
     );
   }
 
-  if (isEmpty || data.length === 0) {
+  if (isEmpty || data.length === 0 || totalRevenue === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-stone-200/90 bg-white p-12 text-center shadow-xs min-h-[360px]">
+      <div className="flex flex-col items-center justify-center rounded-xl border border-stone-200/90 bg-white p-12 text-center shadow-xs min-h-[300px]">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stone-100 text-stone-400 mb-3">
           <BarChart3 size={24} />
         </div>
         <h3 className="font-serif text-lg font-medium text-stone-900">No Sales History Yet</h3>
         <p className="mt-1 text-xs text-stone-500 max-w-sm">
-          Monthly sales trends and revenue metrics will populate automatically when transactions are recorded.
+          Monthly sales trends and revenue metrics will populate automatically in real time as store orders are placed.
         </p>
       </div>
     );
   }
 
-  const activeItem = activeIdx !== null ? data[activeIdx] : null;
+  const activeItem = activeIdx !== null && data[activeIdx] ? data[activeIdx] : data[data.length - 1];
 
   return (
     <div className="flex flex-col justify-between rounded-xl border border-stone-200/90 bg-white p-6 shadow-xs">
@@ -69,12 +57,12 @@ export default function SalesOverviewChart({ isLoading = false, isEmpty = false 
             <h2 className="font-serif text-lg font-semibold tracking-tight text-stone-900">
               Sales & Revenue Overview
             </h2>
-            <span className="rounded bg-rose-50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-rose-800 font-semibold ring-1 ring-rose-200/60">
-              Demo Data
+            <span className="rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-emerald-800 font-semibold ring-1 ring-emerald-200/60">
+              Live Trajectory
             </span>
           </div>
           <p className="text-xs text-stone-500 mt-0.5">
-            Annual monthly gross performance across ethnic wear & boutique accessories
+            Gross merchandise performance across ethnic wear & boutique accessories
           </p>
         </div>
 

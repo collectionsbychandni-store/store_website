@@ -1,59 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Shirt, Tag } from 'lucide-react';
-
-const DEMO_TOP_PRODUCTS = [
-  {
-    id: 'prod-1',
-    title: "Women's Designer Kurti",
-    category: 'Kurtis',
-    sku: 'WDK-PNK-M',
-    unitsSold: 148,
-    revenue: 369852,
-    price: 2499,
-  },
-  {
-    id: 'prod-2',
-    title: 'Elegant Party Wear Dress',
-    category: 'Dresses',
-    sku: 'EPW-BUR-S',
-    unitsSold: 94,
-    revenue: 404106,
-    price: 4299,
-  },
-  {
-    id: 'prod-3',
-    title: "Embroidered Women's Kurti",
-    category: 'Kurtis',
-    sku: 'EWK-RED-L',
-    unitsSold: 86,
-    revenue: 283714,
-    price: 3299,
-  },
-  {
-    id: 'prod-4',
-    title: 'Floral Print Kurti',
-    category: 'Kurtis',
-    sku: 'FPK-SGE-M',
-    unitsSold: 81,
-    revenue: 129519,
-    price: 1599,
-  },
-  {
-    id: 'prod-5',
-    title: 'Cotton Casual Kurti',
-    category: 'Kurtis',
-    sku: 'CCK-WHT-XL',
-    unitsSold: 67,
-    revenue: 80333,
-    price: 1199,
-  },
-];
+import { ArrowUpRight, Shirt } from 'lucide-react';
 
 /**
  * Top-Selling Products Component
+ * Displays real catalog performance based on live orders
  */
-export default function TopProductsList({ products = DEMO_TOP_PRODUCTS }) {
+export default function TopProductsList({ products = [] }) {
   return (
     <div className="rounded-xl border border-stone-200/90 bg-white p-5 sm:p-6 shadow-xs flex flex-col justify-between">
       {/* Header */}
@@ -64,8 +17,8 @@ export default function TopProductsList({ products = DEMO_TOP_PRODUCTS }) {
               <h2 className="font-serif text-lg font-semibold tracking-tight text-stone-900">
                 Top Products
               </h2>
-              <span className="rounded bg-rose-50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-rose-800 font-semibold ring-1 ring-rose-200/60">
-                Demo Data
+              <span className="rounded bg-stone-100 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-stone-600 font-medium ring-1 ring-stone-200/60">
+                Live Performance
               </span>
             </div>
             <p className="text-xs text-stone-500 mt-0.5">
@@ -82,38 +35,54 @@ export default function TopProductsList({ products = DEMO_TOP_PRODUCTS }) {
           </Link>
         </div>
 
-        {/* Product Items List */}
-        <div className="mt-4 divide-y divide-stone-100">
-          {products.map((item, index) => (
-            <div
-              key={item.id}
-              className="py-3.5 flex items-center justify-between gap-3 hover:bg-stone-50/60 transition-colors rounded-lg px-2"
-            >
-              <div className="flex items-center space-x-3 min-w-0">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-900 ring-1 ring-rose-100/80">
-                  <Shirt size={18} strokeWidth={1.5} />
+        {/* Product Items List or Zero State */}
+        {products.length === 0 ? (
+          <div className="py-8 text-center">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-stone-100 text-stone-400">
+              <Shirt size={20} strokeWidth={1.5} />
+            </div>
+            <p className="mt-2 text-xs font-medium text-stone-700">No Sales Recorded Yet</p>
+            <p className="mt-0.5 text-[11px] text-stone-400">
+              Top-performing products will populate automatically as orders are placed.
+            </p>
+          </div>
+        ) : (
+          <div className="mt-4 divide-y divide-stone-100">
+            {products.map((item) => (
+              <div
+                key={item.id}
+                className="py-3.5 flex items-center justify-between gap-3 hover:bg-stone-50/60 transition-colors rounded-lg px-2"
+              >
+                <div className="flex items-center space-x-3 min-w-0">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-900 ring-1 ring-rose-100/80">
+                    <Shirt size={18} strokeWidth={1.5} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-stone-900 truncate">{item.title}</p>
+                    <div className="flex items-center space-x-2 text-[11px] text-stone-500 mt-0.5">
+                      <span>{item.category}</span>
+                      {item.sku && (
+                        <>
+                          <span aria-hidden="true">·</span>
+                          <span className="font-mono text-stone-400">{item.sku}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold text-stone-900 truncate">{item.title}</p>
-                  <div className="flex items-center space-x-2 text-[11px] text-stone-500 mt-0.5">
-                    <span>{item.category}</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="font-mono text-stone-400">{item.sku}</span>
+
+                <div className="text-right shrink-0">
+                  <div className="font-serif text-xs font-bold text-stone-900 tabular-nums">
+                    ₹{(item.revenue || 0).toLocaleString('en-IN')}
+                  </div>
+                  <div className="text-[11px] text-stone-500 font-medium mt-0.5">
+                    {item.unitsSold || 0} units
                   </div>
                 </div>
               </div>
-
-              <div className="text-right shrink-0">
-                <div className="font-serif text-xs font-bold text-stone-900 tabular-nums">
-                  ₹{item.revenue.toLocaleString('en-IN')}
-                </div>
-                <div className="text-[11px] text-stone-500 font-medium mt-0.5">
-                  {item.unitsSold} units
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Footer link to catalog */}

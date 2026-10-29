@@ -17,6 +17,7 @@ import shippingRoutes from './shippingRoutes.js';
 import returnRoutes from './returnRoutes.js';
 import notificationRoutes from './notificationRoutes.js';
 import posRoutes from './posRoutes.js';
+import dashboardRoutes from './dashboardRoutes.js';
 
 const router = Router();
 
@@ -47,6 +48,8 @@ router.use('/notifications', notificationRoutes);
 router.use('/admin/notifications', notificationRoutes);
 router.use('/admin/pos', posRoutes);
 router.use('/pos', posRoutes);
+router.use('/admin/dashboard', dashboardRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 export default router;
 

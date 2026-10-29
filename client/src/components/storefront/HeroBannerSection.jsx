@@ -30,8 +30,10 @@ export default function HeroBannerSection({ banners = [], fallbackHero = null })
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [hasCompletedCycle, setHasCompletedCycle] = useState(false);
   const timerRef = useRef(null);
   const containerRef = useRef(null);
+  const slidesAdvancedRef = useRef(0);
 
   const total = bannerList.length;
   const currentBanner = bannerList[currentIndex] || bannerList[0];
@@ -57,22 +59,29 @@ export default function HeroBannerSection({ banners = [], fallbackHero = null })
     }
   };
 
-  // Auto-advance carousel every 7 seconds, respecting reduced-motion and pause on hover
+  // Auto-advance carousel one time through each poster, then stop
   useEffect(() => {
-    if (total <= 1 || isPaused) return;
+    if (total <= 1 || isPaused || hasCompletedCycle) return;
 
     // Check if user prefers reduced motion
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) return;
 
     timerRef.current = setInterval(() => {
-      handleNext();
-    }, 7000);
+      slidesAdvancedRef.current += 1;
+      if (slidesAdvancedRef.current >= total) {
+        // Completed one full tour of posters/banners
+        setHasCompletedCycle(true);
+        if (timerRef.current) clearInterval(timerRef.current);
+      } else {
+        handleNext();
+      }
+    }, 6000);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [total, isPaused, handleNext]);
+  }, [total, isPaused, hasCompletedCycle, handleNext]);
 
   // Safe destination link check
   const getSafeLink = (url) => {

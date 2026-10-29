@@ -40,9 +40,23 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-stone-800/80">
           {/* Brand Column */}
           <div className="md:col-span-2 space-y-4">
-            <h3 className="font-serif text-2xl text-stone-100 tracking-wider font-semibold">
-              Collections by Chandni
-            </h3>
+            <div className="flex items-center space-x-3.5">
+              <div className="h-14 w-14 rounded-full bg-[#272123] p-1 ring-1 ring-amber-400/30 shadow-xs flex items-center justify-center shrink-0">
+                <img
+                  src="/assets/aistudio/logo_454bd7ce.png"
+                  alt="Collections by Chandni"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <div>
+                <h3 className="font-serif text-2xl text-stone-100 tracking-wider font-semibold">
+                  Collections by Chandni
+                </h3>
+                <span className="block text-[10px] tracking-[0.25em] uppercase text-amber-200/80 font-light">
+                  Indian Ethnic Wear & Jewellery
+                </span>
+              </div>
+            </div>
             <p className="text-stone-400 text-sm max-w-md leading-relaxed font-light">
               An Indian women&apos;s fashion boutique curating handcrafted ethnic wear,
               designer festive kurtis, Banarasi silks, and exquisite imitation jewellery.

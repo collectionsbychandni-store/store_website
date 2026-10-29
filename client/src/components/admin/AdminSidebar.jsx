@@ -78,16 +78,21 @@ export default function AdminSidebar({ isOpen, onClose }) {
           <Link
             to="/admin"
             onClick={handleNavClick}
-            className="group flex flex-col focus:outline-none"
+            className="group flex items-center space-x-3 focus:outline-none"
           >
-            <div className="flex items-center space-x-2">
-              <span className="font-serif text-lg font-semibold tracking-tight text-stone-900 group-hover:text-rose-900 transition-colors">
+            <img
+              src="/assets/aistudio/logo_454bd7ce.png"
+              alt="Collections by Chandni Emblem"
+              className="h-11 w-11 object-contain shrink-0 group-hover:scale-105 transition-transform"
+            />
+            <div className="flex flex-col">
+              <span className="font-serif text-sm font-semibold tracking-tight text-stone-900 group-hover:text-rose-900 transition-colors leading-tight">
                 Collections by Chandni
               </span>
+              <span className="text-[10px] uppercase tracking-[0.2em] font-medium text-rose-800/80">
+                Admin Atelier
+              </span>
             </div>
-            <span className="text-[10px] uppercase tracking-[0.2em] font-medium text-rose-800/80">
-              Admin Atelier
-            </span>
           </Link>
 
           {/* Close button on mobile */}

@@ -16,7 +16,7 @@ export default function DashboardStatCard({
   icon: Icon,
   subtitle = '',
   trend = null,
-  isDemo = true,
+  isDemo = false,
 }) {
   return (
     <div className="relative flex flex-col justify-between rounded-xl border border-stone-200/90 bg-white p-5 sm:p-6 shadow-xs hover:border-rose-200/80 transition-all duration-200">

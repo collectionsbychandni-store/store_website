@@ -27,203 +27,25 @@ async function isDatabaseAlive() {
 }
 
 // -----------------------------------------------------------------------------
-// Seed-aligned In-Memory Customer Directory (Dev & Fallback)
+// Live Customer Directory (Dev & Fallback)
 // -----------------------------------------------------------------------------
-const INITIAL_DEMO_CUSTOMERS = [
-  {
-    id: 'customer-demo-uuid-2',
-    name: 'Demo Customer',
-    email: 'customer@collectionsbychandni.in',
-    phone: '+919812345678',
-    role: 'CUSTOMER',
-    isActive: true,
-    createdAt: new Date('2026-09-15T12:00:00Z'),
-    updatedAt: new Date('2026-09-15T12:00:00Z'),
-  },
-  {
-    id: 'customer-seed-priya',
-    name: 'Priya Sharma',
-    email: 'priya.sharma@example.com',
-    phone: '+919820123456',
-    role: 'CUSTOMER',
-    isActive: true,
-    createdAt: new Date('2026-10-02T10:30:00Z'),
-    updatedAt: new Date('2026-10-02T10:30:00Z'),
-  },
-  {
-    id: 'customer-seed-ananya',
-    name: 'Ananya Desai',
-    email: 'ananya.desai@example.com',
-    phone: '+919876112233',
-    role: 'CUSTOMER',
-    isActive: true,
-    createdAt: new Date('2026-10-05T14:15:00Z'),
-    updatedAt: new Date('2026-10-05T14:15:00Z'),
-  },
-  {
-    id: 'customer-seed-rohit',
-    name: 'Rohit Verma',
-    email: 'rohit.verma@example.com',
-    phone: '+919833445566',
-    role: 'CUSTOMER',
-    isActive: false, // Inactive / Deactivated customer for testing
-    createdAt: new Date('2026-09-28T09:00:00Z'),
-    updatedAt: new Date('2026-10-10T11:20:00Z'),
-  },
-  {
-    id: 'customer-seed-meera',
-    name: 'Meera Iyer',
-    email: 'meera.iyer@example.com',
-    phone: '+919844556677',
-    role: 'CUSTOMER',
-    isActive: true,
-    createdAt: new Date('2026-10-12T16:00:00Z'),
-    updatedAt: new Date('2026-10-12T16:00:00Z'),
-  },
-  {
-    id: 'customer-seed-kavita',
-    name: 'Kavita Patel',
-    email: 'kavita.patel@example.com',
-    phone: '+919811223344',
-    role: 'CUSTOMER',
-    isActive: true,
-    createdAt: new Date('2026-10-14T11:45:00Z'),
-    updatedAt: new Date('2026-10-14T11:45:00Z'),
-  },
-];
+const INITIAL_DEMO_CUSTOMERS = [];
 
-let inMemoryCustomers = [...INITIAL_DEMO_CUSTOMERS];
+let inMemoryCustomers = [];
 
-// Synchronize in-memory customer list with authService
-try {
-  const authUsers = authService._getInMemoryUsers();
-  INITIAL_DEMO_CUSTOMERS.forEach((c) => {
-    if (!authUsers.some((u) => u.id === c.id)) {
-      authUsers.push({
-        ...c,
-        passwordHash: authUsers[0]?.passwordHash || '$2a$10$demoHashPlaceholder',
-      });
-    }
-  });
-} catch (e) {
-  // Ignore sync error
+export function _refreshInMemoryCustomers() {
+  try {
+    const authUsers = authService._getInMemoryUsers();
+    inMemoryCustomers = authUsers.filter((u) => u.role === 'CUSTOMER');
+  } catch (e) {
+    inMemoryCustomers = [];
+  }
 }
+_refreshInMemoryCustomers();
 
-// Additional addresses for seed customers
-const DEMO_EXTRA_ADDRESSES = [
-  {
-    id: 'addr-priya-1',
-    userId: 'customer-seed-priya',
-    name: 'Priya Sharma',
-    phone: '+919820123456',
-    addressLine1: 'B-204, Crystal Heights',
-    addressLine2: 'Civil Lines',
-    landmark: 'Opposite High Court',
-    city: 'Jaipur',
-    state: 'Rajasthan',
-    pincode: '302006',
-    country: 'India',
-    addressType: 'HOME',
-    isDefault: true,
-    createdAt: new Date('2026-10-02T10:30:00Z'),
-    updatedAt: new Date('2026-10-02T10:30:00Z'),
-  },
-  {
-    id: 'addr-ananya-1',
-    userId: 'customer-seed-ananya',
-    name: 'Ananya Desai',
-    phone: '+919876112233',
-    addressLine1: 'Flat 12A, Sea View Apartments',
-    addressLine2: 'Worli Sea Face',
-    landmark: 'Near Worli Dairy',
-    city: 'Mumbai',
-    state: 'Maharashtra',
-    pincode: '400018',
-    country: 'India',
-    addressType: 'HOME',
-    isDefault: true,
-    createdAt: new Date('2026-10-05T14:15:00Z'),
-    updatedAt: new Date('2026-10-05T14:15:00Z'),
-  },
-];
-
-// Additional demo orders for seed customers
-const DEMO_EXTRA_ORDERS = [
-  {
-    id: 'order-seed-priya-1',
-    orderNumber: 'CBC-910234-1182',
-    userId: 'customer-seed-priya',
-    customer: {
-      id: 'customer-seed-priya',
-      name: 'Priya Sharma',
-      email: 'priya.sharma@example.com',
-      phone: '+919820123456',
-    },
-    status: 'DELIVERED',
-    paymentStatus: 'PAID',
-    paymentMethod: 'UPI',
-    subtotal: 3499,
-    shippingAmount: 0,
-    discountAmount: 0,
-    totalAmount: 3499,
-    isStockDeducted: true,
-    items: [
-      {
-        id: 'item-p1',
-        orderId: 'order-seed-priya-1',
-        productTitle: "Women's Designer Kurti",
-        sku: 'CBC-WDK-PNK-M',
-        size: 'M',
-        color: 'Blush Pink',
-        quantity: 1,
-        unitPrice: 2499,
-        totalPrice: 2499,
-      },
-    ],
-    statusHistory: [
-      { status: 'DELIVERED', timestamp: new Date('2026-10-06T15:00:00Z'), note: 'Delivered' },
-    ],
-    createdAt: new Date('2026-10-03T11:00:00Z'),
-    updatedAt: new Date('2026-10-06T15:00:00Z'),
-  },
-  {
-    id: 'order-seed-ananya-1',
-    orderNumber: 'CBC-940381-8821',
-    userId: 'customer-seed-ananya',
-    customer: {
-      id: 'customer-seed-ananya',
-      name: 'Ananya Desai',
-      email: 'ananya.desai@example.com',
-      phone: '+919876112233',
-    },
-    status: 'CONFIRMED',
-    paymentStatus: 'PAID',
-    paymentMethod: 'NET_BANKING',
-    subtotal: 5999,
-    shippingAmount: 0,
-    discountAmount: 0,
-    totalAmount: 5999,
-    isStockDeducted: true,
-    items: [
-      {
-        id: 'item-a1',
-        orderId: 'order-seed-ananya-1',
-        productTitle: 'Elegant Party Wear Dress',
-        sku: 'CBC-EPD-WIN-S',
-        size: 'S',
-        color: 'Wine Burgundy',
-        quantity: 1,
-        unitPrice: 4299,
-        totalPrice: 4299,
-      },
-    ],
-    statusHistory: [
-      { status: 'CONFIRMED', timestamp: new Date('2026-10-06T12:00:00Z'), note: 'Confirmed' },
-    ],
-    createdAt: new Date('2026-10-06T11:30:00Z'),
-    updatedAt: new Date('2026-10-06T12:00:00Z'),
-  },
-];
+// Empty initial addresses and orders for clean production launch
+const DEMO_EXTRA_ADDRESSES = [];
+const DEMO_EXTRA_ORDERS = [];
 
 // Helper to calculate customer order spending based on defined rules:
 // Successful spending excludes CANCELLED, RETURNED, and REFUNDED orders.

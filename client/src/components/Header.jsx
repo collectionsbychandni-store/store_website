@@ -65,29 +65,36 @@ export default function Header() {
         <span>Handcrafted Indian Couture & Festive Jewellery · Complimentary Shipping</span>
       </div>
 
-      <Container>
-        <div className="flex items-center justify-between h-20 gap-4">
+      <Container className="px-2.5 sm:px-6 lg:px-8 max-w-full">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-1.5 sm:gap-4 max-w-full">
           {/* Mobile Menu Button */}
-          <div className="flex items-center lg:hidden">
+          <div className="flex items-center lg:hidden shrink-0">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-stone-800 hover:text-[#781D42] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#781D42]"
+              className="p-1.5 -ml-1 text-stone-800 hover:text-[#781D42] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#781D42]"
               aria-label="Toggle Navigation Menu"
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
 
-          {/* Brand Wordmark (Zone 1 of Top Bar Contract) */}
-          <div className="flex-1 lg:flex-none text-center lg:text-left">
-            <Link to="/" className="inline-block group focus:outline-none">
-              <span className="block font-serif text-2xl sm:text-3xl font-semibold tracking-wider text-stone-950 group-hover:text-[#781D42] transition-colors whitespace-nowrap">
-                Collections by Chandni
-              </span>
-              <span className="block text-[10px] tracking-[0.25em] uppercase text-stone-500 font-light -mt-0.5">
-                Indian Ethnic Wear & Jewellery
-              </span>
+          {/* Brand Wordmark & Emblem */}
+          <div className="flex-1 lg:flex-none text-left min-w-0 pr-1">
+            <Link to="/" className="inline-flex items-center gap-1.5 sm:gap-3 group focus:outline-none text-left max-w-full">
+              <img
+                src="/assets/aistudio/logo_454bd7ce.png"
+                alt="Collections by Chandni Emblem"
+                className="h-7 w-7 min-[380px]:h-8 min-[380px]:w-8 sm:h-12 sm:w-12 object-contain shrink-0 group-hover:scale-105 transition-transform duration-200"
+              />
+              <div className="min-w-0 flex-1">
+                <span className="block font-serif text-sm min-[360px]:text-[15px] min-[400px]:text-base sm:text-2xl font-semibold tracking-tight sm:tracking-wider text-stone-950 group-hover:text-[#781D42] transition-colors truncate leading-tight">
+                  Collections by Chandni
+                </span>
+                <span className="hidden sm:block text-[9px] sm:text-[10px] tracking-[0.25em] uppercase text-stone-500 font-light -mt-0.5 truncate">
+                  Indian Ethnic Wear & Jewellery
+                </span>
+              </div>
             </Link>
           </div>
 
@@ -177,7 +184,7 @@ export default function Header() {
           </nav>
 
           {/* Utility Action Links: Search, Account & Cart (Zone 3) */}
-          <div className="flex items-center space-x-5 shrink-0">
+          <div className="flex items-center space-x-1 sm:space-x-4 shrink-0">
             {/* Search Toggle / Input */}
             <div className="relative">
               {searchOpen ? (
@@ -186,9 +193,9 @@ export default function Header() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search ethnic wear..."
+                    placeholder="Search..."
                     autoFocus
-                    className="w-36 sm:w-48 text-xs py-1.5 px-2.5 bg-white border border-stone-300 rounded-xs text-stone-900 focus:outline-none focus:border-[#781D42]"
+                    className="w-24 min-[360px]:w-28 sm:w-48 text-xs py-1.5 px-2 bg-white border border-stone-300 rounded-xs text-stone-900 focus:outline-none focus:border-[#781D42]"
                   />
                   <button
                     type="submit"
@@ -321,7 +328,7 @@ export default function Header() {
             <NavLink
               to="/cart"
               className={({ isActive }) =>
-                `flex items-center space-x-2 text-xs uppercase tracking-wider transition-colors relative py-1 px-2.5 rounded-xs ${
+                `flex items-center space-x-1 sm:space-x-2 text-xs uppercase tracking-wider transition-colors relative py-1 px-1.5 sm:px-2.5 rounded-xs ${
                   isActive
                     ? 'text-white bg-[#781D42] font-semibold'
                     : 'text-stone-700 hover:text-stone-950 hover:bg-[#F3EFE6]'

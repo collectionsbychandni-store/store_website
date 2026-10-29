@@ -480,11 +480,16 @@ const INITIAL_SEED_ORDERS = [
   },
 ];
 
-// Load persisted orders from disk so they survive across deploys
-const inMemoryOrders = loadCollection('orders', INITIAL_SEED_ORDERS);
+// Load persisted orders from disk so they survive across deploys (clean production launch)
+const inMemoryOrders = loadCollection('orders', []);
 
 export function persistOrders() {
   saveCollection('orders', inMemoryOrders);
+}
+
+export function clearAllOrders() {
+  inMemoryOrders.length = 0;
+  persistOrders();
 }
 
 export function addOrderToStore(newOrder) {

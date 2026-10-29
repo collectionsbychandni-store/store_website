@@ -314,9 +314,11 @@ export default function CheckoutPage() {
           <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
             {/* Header Success Banner */}
             <div className="bg-white border border-[#E6D7C3] p-8 sm:p-10 rounded-xs shadow-sm text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-[#FAF4EB] border border-[#E6D7C3] text-[#781D42] flex items-center justify-center mx-auto">
-                <CheckCircle2 size={32} />
-              </div>
+              <img
+                src="/assets/aistudio/logo_454bd7ce.png"
+                alt="Collections by Chandni Emblem"
+                className="w-16 h-16 mx-auto object-contain drop-shadow-xs"
+              />
 
               <div>
                 <span className="text-[10px] uppercase tracking-[0.25em] text-[#781D42] font-semibold block mb-1">

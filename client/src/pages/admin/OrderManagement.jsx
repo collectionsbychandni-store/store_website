@@ -442,17 +442,17 @@ export default function OrderManagement() {
         </div>
 
         {/* Search & Filter Controls */}
-        <div className="bg-white border border-stone-200 rounded-xs p-4 shadow-xs space-y-3">
-          <div className="flex flex-col md:flex-row items-center gap-3">
+        <div className="bg-white border border-stone-200 rounded-xs p-3.5 sm:p-4 shadow-xs space-y-3 max-w-full">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2.5 sm:gap-3">
             {/* Search */}
-            <div className="relative flex-1 w-full">
+            <div className="relative flex-1 w-full min-w-0">
               <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by order #, customer name, email, or phone..."
-                className="w-full text-xs py-2 pl-9 pr-3 bg-stone-50 border border-stone-200 rounded-xs focus:outline-none focus:border-[#781D42] text-stone-900"
+                className="w-full text-xs py-2 pl-9 pr-8 bg-stone-50 border border-stone-200 rounded-xs focus:outline-none focus:border-[#781D42] text-stone-900"
               />
               {search && (
                 <button
@@ -465,12 +465,12 @@ export default function OrderManagement() {
               )}
             </div>
 
-            {/* Status Filter */}
-            <div className="flex items-center gap-2 w-full md:w-auto">
+            {/* Status Filters */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:flex items-center gap-2 w-full md:w-auto">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="text-xs py-2 px-3 bg-stone-50 border border-stone-200 rounded-xs focus:outline-none focus:border-[#781D42] text-stone-800"
+                className="w-full md:w-auto text-xs py-2 px-3 bg-stone-50 border border-stone-200 rounded-xs focus:outline-none focus:border-[#781D42] text-stone-800 truncate"
               >
                 {ALL_ORDER_STATUSES.map((st) => (
                   <option key={st} value={st}>
@@ -482,7 +482,7 @@ export default function OrderManagement() {
               <select
                 value={paymentFilter}
                 onChange={(e) => setPaymentFilter(e.target.value)}
-                className="text-xs py-2 px-3 bg-stone-50 border border-stone-200 rounded-xs focus:outline-none focus:border-[#781D42] text-stone-800"
+                className="w-full md:w-auto text-xs py-2 px-3 bg-stone-50 border border-stone-200 rounded-xs focus:outline-none focus:border-[#781D42] text-stone-800 truncate"
               >
                 {ALL_PAYMENT_STATUSES.map((pst) => (
                   <option key={pst} value={pst}>
