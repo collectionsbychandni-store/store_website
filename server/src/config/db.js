@@ -56,6 +56,16 @@ export async function syncDatabaseSchema() {
           ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "whatsappNotifications" BOOLEAN NOT NULL DEFAULT true;
         END IF;
 
+        IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'orders') THEN
+          ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "paymentStatus" TEXT NOT NULL DEFAULT 'AWAITING_PAYMENT';
+          ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "idempotencyKey" TEXT;
+          ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "subtotal" DECIMAL(10, 2) NOT NULL DEFAULT 0.00;
+          ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "shippingAmount" DECIMAL(10, 2) NOT NULL DEFAULT 0.00;
+          ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "discountAmount" DECIMAL(10, 2) NOT NULL DEFAULT 0.00;
+          ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "totalAmount" DECIMAL(10, 2) NOT NULL DEFAULT 0.00;
+          ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS "isStockDeducted" BOOLEAN NOT NULL DEFAULT false;
+        END IF;
+
         CREATE TABLE IF NOT EXISTS "notifications" (
           "id" TEXT PRIMARY KEY,
           "orderId" TEXT REFERENCES "orders"("id") ON DELETE SET NULL,

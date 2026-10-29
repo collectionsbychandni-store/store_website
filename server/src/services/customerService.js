@@ -96,115 +96,118 @@ export async function getCustomers({
   const dbConnected = await isDatabaseAlive();
 
   if (dbConnected) {
-    const where = {
-      role: 'CUSTOMER', // Strictly exclude admin users
-    };
+    try {
+      const where = {
+        role: 'CUSTOMER', // Strictly exclude admin users
+      };
 
-    // Filter by Active / Inactive status
-    if (status === 'ACTIVE') {
-      where.isActive = true;
-    } else if (status === 'INACTIVE') {
-      where.isActive = false;
-    }
-
-    // Search by name, email, or phone
-    if (search && typeof search === 'string' && search.trim()) {
-      const s = search.trim();
-      where.OR = [
-        { name: { contains: s, mode: 'insensitive' } },
-        { email: { contains: s, mode: 'insensitive' } },
-        { phone: { contains: s, mode: 'insensitive' } },
-      ];
-    }
-
-    // Registration date range filter
-    if (startDate || endDate) {
-      where.createdAt = {};
-      if (startDate) {
-        const start = new Date(startDate);
-        if (!isNaN(start.getTime())) where.createdAt.gte = start;
+      // Filter by Active / Inactive status
+      if (status === 'ACTIVE') {
+        where.isActive = true;
+      } else if (status === 'INACTIVE') {
+        where.isActive = false;
       }
-      if (endDate) {
-        const end = new Date(endDate);
-        if (!isNaN(end.getTime())) {
-          end.setUTCHours(23, 59, 59, 999);
-          where.createdAt.lte = end;
+
+      // Search by name, email, or phone
+      if (search && typeof search === 'string' && search.trim()) {
+        const s = search.trim();
+        where.OR = [
+          { name: { contains: s, mode: 'insensitive' } },
+          { email: { contains: s, mode: 'insensitive' } },
+          { phone: { contains: s, mode: 'insensitive' } },
+        ];
+      }
+
+      // Registration date range filter
+      if (startDate || endDate) {
+        where.createdAt = {};
+        if (startDate) {
+          const start = new Date(startDate);
+          if (!isNaN(start.getTime())) where.createdAt.gte = start;
+        }
+        if (endDate) {
+          const end = new Date(endDate);
+          if (!isNaN(end.getTime())) {
+            end.setUTCHours(23, 59, 59, 999);
+            where.createdAt.lte = end;
+          }
         }
       }
-    }
 
-    const [total, rawCustomers] = await Promise.all([
-      prisma.user.count({ where }),
-      prisma.user.findMany({
-        where,
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          phone: true,
-          role: true,
-          isActive: true,
-          createdAt: true,
-          updatedAt: true,
-          orders: {
-            select: {
-              id: true,
-              orderNumber: true,
-              status: true,
-              paymentStatus: true,
-              totalAmount: true,
-              createdAt: true,
+      const [total, rawCustomers] = await Promise.all([
+        prisma.user.count({ where }),
+        prisma.user.findMany({
+          where,
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            role: true,
+            isActive: true,
+            createdAt: true,
+            updatedAt: true,
+            orders: {
+              select: {
+                id: true,
+                orderNumber: true,
+                status: true,
+                totalAmount: true,
+                createdAt: true,
+              },
             },
           },
-        },
-        orderBy:
-          validSortBy === 'orderCount' || validSortBy === 'totalSpent'
-            ? [{ createdAt: 'desc' }]
-            : [{ [validSortBy]: validSortOrder }],
-      }),
-    ]);
+          orderBy:
+            validSortBy === 'orderCount' || validSortBy === 'totalSpent'
+              ? [{ createdAt: 'desc' }]
+              : [{ [validSortBy]: validSortOrder }],
+        }),
+      ]);
 
-    // Format and calculate spending & order metrics
-    let formatted = rawCustomers.map((c) => {
-      const metrics = calculateCustomerSpending(c.orders || []);
+      // Format and calculate spending & order metrics
+      let formatted = rawCustomers.map((c) => {
+        const metrics = calculateCustomerSpending(c.orders || []);
+        return {
+          id: c.id,
+          name: c.name,
+          email: c.email,
+          phone: c.phone || null,
+          role: c.role,
+          isActive: Boolean(c.isActive),
+          createdAt: c.createdAt,
+          updatedAt: c.updatedAt,
+          orderCount: metrics.totalOrders,
+          completedOrders: metrics.completedOrders,
+          totalSpent: metrics.totalSpent,
+          spendingFormatted: metrics.spendingFormatted,
+        };
+      });
+
+      // Custom sorting if computed by orderCount or totalSpent
+      if (validSortBy === 'orderCount') {
+        formatted.sort((a, b) =>
+          validSortOrder === 'asc' ? a.orderCount - b.orderCount : b.orderCount - a.orderCount
+        );
+      } else if (validSortBy === 'totalSpent') {
+        formatted.sort((a, b) =>
+          validSortOrder === 'asc' ? a.totalSpent - b.totalSpent : b.totalSpent - a.totalSpent
+        );
+      }
+
+      const paginatedData = formatted.slice(skip, skip + limitNum);
+
       return {
-        id: c.id,
-        name: c.name,
-        email: c.email,
-        phone: c.phone || null,
-        role: c.role,
-        isActive: Boolean(c.isActive),
-        createdAt: c.createdAt,
-        updatedAt: c.updatedAt,
-        orderCount: metrics.totalOrders,
-        completedOrders: metrics.completedOrders,
-        totalSpent: metrics.totalSpent,
-        spendingFormatted: metrics.spendingFormatted,
+        data: paginatedData,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          totalPages: Math.ceil(total / limitNum) || 0,
+        },
       };
-    });
-
-    // Custom sorting if computed by orderCount or totalSpent
-    if (validSortBy === 'orderCount') {
-      formatted.sort((a, b) =>
-        validSortOrder === 'asc' ? a.orderCount - b.orderCount : b.orderCount - a.orderCount
-      );
-    } else if (validSortBy === 'totalSpent') {
-      formatted.sort((a, b) =>
-        validSortOrder === 'asc' ? a.totalSpent - b.totalSpent : b.totalSpent - a.totalSpent
-      );
+    } catch (dbErr) {
+      console.warn('Customer directory DB query warning (falling back to in-memory):', dbErr.message);
     }
-
-    const paginatedData = formatted.slice(skip, skip + limitNum);
-
-    return {
-      data: paginatedData,
-      pagination: {
-        page: pageNum,
-        limit: limitNum,
-        total,
-        totalPages: Math.ceil(total / limitNum) || 0,
-      },
-    };
   }
 
   // In-Memory Fallback
@@ -311,24 +314,28 @@ export async function getCustomerStats() {
   const startOfMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
 
   if (dbConnected) {
-    const [totalCustomers, activeCustomers, inactiveCustomers, newThisMonth] = await Promise.all([
-      prisma.user.count({ where: { role: 'CUSTOMER' } }),
-      prisma.user.count({ where: { role: 'CUSTOMER', isActive: true } }),
-      prisma.user.count({ where: { role: 'CUSTOMER', isActive: false } }),
-      prisma.user.count({
-        where: {
-          role: 'CUSTOMER',
-          createdAt: { gte: startOfMonth },
-        },
-      }),
-    ]);
+    try {
+      const [totalCustomers, activeCustomers, inactiveCustomers, newThisMonth] = await Promise.all([
+        prisma.user.count({ where: { role: 'CUSTOMER' } }),
+        prisma.user.count({ where: { role: 'CUSTOMER', isActive: true } }),
+        prisma.user.count({ where: { role: 'CUSTOMER', isActive: false } }),
+        prisma.user.count({
+          where: {
+            role: 'CUSTOMER',
+            createdAt: { gte: startOfMonth },
+          },
+        }),
+      ]);
 
-    return {
-      totalCustomers,
-      activeCustomers,
-      inactiveCustomers,
-      newThisMonth,
-    };
+      return {
+        totalCustomers,
+        activeCustomers,
+        inactiveCustomers,
+        newThisMonth,
+      };
+    } catch (e) {
+      console.warn('Customer stats DB query warning (falling back to in-memory):', e.message);
+    }
   }
 
   // In-memory stats
@@ -361,83 +368,96 @@ export async function getCustomerById(id) {
   const dbConnected = await isDatabaseAlive();
 
   if (dbConnected) {
-    const user = await prisma.user.findUnique({
-      where: { id },
-      include: {
-        addresses: {
-          orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
-        },
-        orders: {
-          orderBy: { createdAt: 'desc' },
-          select: {
-            id: true,
-            orderNumber: true,
-            status: true,
-            paymentStatus: true,
-            subtotal: true,
-            shippingAmount: true,
-            discountAmount: true,
-            totalAmount: true,
-            createdAt: true,
-            _count: {
-              select: { items: true },
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id },
+        include: {
+          addresses: {
+            orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
+          },
+          orders: {
+            orderBy: { createdAt: 'desc' },
+            select: {
+              id: true,
+              orderNumber: true,
+              status: true,
+              subtotal: true,
+              shippingAmount: true,
+              discountAmount: true,
+              totalAmount: true,
+              createdAt: true,
+              _count: {
+                select: { items: true },
+              },
             },
           },
         },
-      },
-    });
+      });
 
-    if (!user) {
-      const err = new Error('Customer not found');
-      err.status = 404;
-      throw err;
+      if (!user) {
+        const err = new Error('Customer not found');
+        err.status = 404;
+        throw err;
+      }
+
+      if (user.role === 'ADMIN') {
+        const err = new Error('Admin profiles cannot be viewed in the customer directory');
+        err.status = 403;
+        throw err;
+      }
+
+      const spending = calculateCustomerSpending(user.orders || []);
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone || null,
+        role: user.role,
+        isActive: Boolean(user.isActive),
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        addresses: (user.addresses || []).map((a) => ({
+          id: a.id,
+          name: a.name,
+          phone: a.phone,
+          addressLine1: a.addressLine1,
+          addressLine2: a.addressLine2 || '',
+          landmark: a.landmark || '',
+          city: a.city,
+          state: a.state,
+          pincode: a.pincode,
+          country: a.country || 'India',
+          addressType: a.addressType || 'HOME',
+          isDefault: Boolean(a.isDefault),
+        })),
+        orders: (user.orders || []).map((o) => {
+          const inferredPaymentStatus =
+            o.paymentStatus ||
+            (['DELIVERED', 'SHIPPED', 'CONFIRMED', 'PROCESSING', 'PACKED'].includes(o.status)
+              ? 'PAID'
+              : ['CANCELLED', 'RETURNED', 'REFUNDED'].includes(o.status)
+              ? 'REFUNDED'
+              : 'AWAITING_PAYMENT');
+          return {
+            id: o.id,
+            orderNumber: o.orderNumber,
+            status: o.status,
+            paymentStatus: inferredPaymentStatus,
+            subtotal: Number(o.subtotal || o.totalAmount),
+            shippingAmount: Number(o.shippingAmount || 0),
+            discountAmount: Number(o.discountAmount || 0),
+            totalAmount: Number(o.totalAmount),
+            itemsCount: o._count?.items || 0,
+            createdAt: o.createdAt,
+          };
+        }),
+        summary: spending,
+      };
+    } catch (dbErr) {
+      if (dbErr.status === 404 || dbErr.status === 403) throw dbErr;
+      console.warn('Customer by ID DB query warning (falling back to in-memory):', dbErr.message);
     }
-
-    if (user.role === 'ADMIN') {
-      const err = new Error('Admin profiles cannot be viewed in the customer directory');
-      err.status = 403;
-      throw err;
-    }
-
-    const spending = calculateCustomerSpending(user.orders || []);
-
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone || null,
-      role: user.role,
-      isActive: Boolean(user.isActive),
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      addresses: (user.addresses || []).map((a) => ({
-        id: a.id,
-        name: a.name,
-        phone: a.phone,
-        addressLine1: a.addressLine1,
-        addressLine2: a.addressLine2 || '',
-        landmark: a.landmark || '',
-        city: a.city,
-        state: a.state,
-        pincode: a.pincode,
-        country: a.country || 'India',
-        addressType: a.addressType || 'HOME',
-        isDefault: Boolean(a.isDefault),
-      })),
-      orders: (user.orders || []).map((o) => ({
-        id: o.id,
-        orderNumber: o.orderNumber,
-        status: o.status,
-        paymentStatus: o.paymentStatus,
-        subtotal: Number(o.subtotal),
-        shippingAmount: Number(o.shippingAmount),
-        discountAmount: Number(o.discountAmount),
-        totalAmount: Number(o.totalAmount),
-        itemsCount: o._count?.items || 0,
-        createdAt: o.createdAt,
-      })),
-      summary: spending,
-    };
   }
 
   // In-Memory Fallback
